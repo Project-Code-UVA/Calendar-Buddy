@@ -2,10 +2,14 @@
 import re
 import os
 
-# extract dates using regex
-def date_regex():
+# main function to test events_regex
+def main():
+    print(events_regex())
+
+# extract events using regex
+def events_regex(file_name="basic_sample.txt"):
     events = {}
-    file_path = os.path.join(os.path.dirname(__file__), "basic_sample.txt") # ensure the correct path to the file
+    file_path = os.path.join(os.path.dirname(__file__), file_name) # ensure the correct path to the file
     with open(file_path) as f: # opening file
         for line in f:
             line = line.strip() # stripping whitespace
@@ -14,15 +18,18 @@ def date_regex():
             if match:
                 date = match.group()
                 before, date, after = line.partition(date) # extracting everything before and after the date
-                if before:
+                if before: # adding entry of date, event_name to events dictionary
                     event_name = before.strip()
-                    events.update({date: event_name})
-                elif after:
+                    events.update({date: event_name}) 
+                elif after: # if nothing before date, check after
                     event_name = after.strip()
                     events.update({date: event_name})
-            else:
+            else: # if date pattern not matched, print no date found
                 print ("No date found")
 
     return events
 
-print(date_regex())
+
+
+if __name__ == "__main__":
+    main()
