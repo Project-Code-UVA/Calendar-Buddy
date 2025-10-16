@@ -14,7 +14,7 @@ def events_regex(file_name="basic_sample.txt"):
         for line in f:
             line = line.strip() # stripping whitespace
             # regex pattern to match dates in various formats
-            if match := re.search(r"(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})|([A-Za-z]+ \d{1,2}, \d{4})", line)
+            if match := re.search(r"(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})|([A-Za-z]+ \d{1,2}, \d{4})", line):
                 date = match.group()
                 before, date, after = line.partition(date) # extracting everything before and after the date
                 if before: # adding entry of date, event_name to events dictionary
