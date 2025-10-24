@@ -1,0 +1,31 @@
+Extracted Meeting Information
+--------------------------------
+
+Dates:
+  - March 7, 2026
+  - 2026-02-10
+  - 01/28/2026
+  - January 22, 2026
+  - Feb 3, 2026
+  - January 24, 2026
+
+Times:
+  - 5 PM
+  - 14:00 
+  - 9:30 AM
+  - 2:00 PM
+  - 11:45 AM
+  - 3 PM
+  - 10:15 AM
+  - 11:00 AM
+
+Locations:
+  - Conference Room B, 3rd Floor
+  - Zoom (link to follow)
+  - Finance Office Suite 210
+  - Engineering HQ, Room 457
+  - TBD
+
+Topics:
+  - Project Planning Meetings – Schedule Update
+
