@@ -1,17 +1,10 @@
+{% extends "base.html" %} 
+<!-- Following the base.html layout -->
 
-<!-- Default HTML Template -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="stylesheet" href="{{url_for("static", filename="styles.css")}}" />
-    <title>Document</title>
-</head>
-<body>
-    <h1>Header!</h1>
-    <p>Paragraph!</p>
+{% block title %}
+Home page
+{% endblock title %}
 
-</body>
-</html>
+{% block body %}
+<h1>Welcome to Calendar Buddy!</h1>
+{% endblock body %}

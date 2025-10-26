@@ -1,7 +1,7 @@
 # Imports
 from flask import Flask, render_template
-from flask_scss import Scss
-from flask_sqlalchemy import SQLAlchemy
+# from flask_scss import Scss
+# from flask_sqlalchemy import SQLAlchemy
 
 # Initialize Flask app
 app = Flask(__name__)
