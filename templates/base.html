@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<!--This is the blueprint for all site pages-->
+
+<html lang="en">
+<head>
+    <title>{% block title %} {% endblock title %} -- Calendar Buddy </title> <!---Page Title will show for every page-->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{url_for("static", filename="styles.css")}}" />
+</head>
+<body>
+    {% block body %} {% endblock body %}
+</body>
+</html>
