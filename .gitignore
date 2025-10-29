@@ -3,6 +3,12 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Colcon Build artifacts
+install/
+build/
+log/
+
+
 # C extensions
 *.so
 
