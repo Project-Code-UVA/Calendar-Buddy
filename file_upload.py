@@ -1,12 +1,14 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, send_from_directory
+import secrets
+from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = '/path/to/the/uploads'
+UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = {'pdf', 'txt', 'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = secrets.token_hex(32) # generates a 64-character hexadecimal string
 
 def allowed_file(filename):
     # returns True if file has . and ends in an allowed extension
@@ -30,7 +32,7 @@ def home():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) # save file to upload folder
             flash('File successfully uploaded')
             return redirect(url_for('home')) # Redirect back to home after upload
-        return render_template('index.html')
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
