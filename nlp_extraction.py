@@ -3,9 +3,11 @@ import os
 import dateparser
 import spacy
 
+import spacy
+from date_spacy import find_dates
+
 def main():
     nlp_extractor(open_file("complicated_sample.txt"))
-    nlp_extractor(open_file("basic_sample.txt"))
 
 def open_file(file_name="complicated_sample.txt"):
     file_path = os.path.join(
@@ -25,9 +27,14 @@ def nlp_extractor(file_content):
     doc = nlp(file_content)
     print("result of model " + str(doc.ents))
     # iterate through the entities found by spacy.
+    events = []
     for ent in doc.ents:
-        if ent.label_ == "DATE":
-            print(f"text: {ent.text}, Parsed {dateparser.parse(ent.text)}")
+        #print (f"Entity: {ent.text}, Label: {ent.label_}")
+        if ent.label_ == "DATE" or ent.label_ == "TIME":
+            print(f"Entity: {ent.text}, Parsed {dateparser.parse(ent.text)}")
+            events += [f"Entity: {ent.text}, Parsed {dateparser.parse(ent.text)}"]
+    return events
+            
     
 
 

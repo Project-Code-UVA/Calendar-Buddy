@@ -1,14 +1,16 @@
 import pymupdf  # PyMuPDF
 import re
 
+# used in APP.PY
 def extract_text_from_pdf(pdf_path):
     text = ""
     with pymupdf.open(pdf_path) as doc:
         for page in doc:
-            text += page.get_text()
+            page_text = page.get_text().replace(u"\u200b", "")
+            text += page_text + "\n"
     return text
 
-
+# the following are not used in app.py but could be useful for extracting meeting details
 def extract_meeting_details(text):
     date_pattern = r'\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.? \d{1,2},? \d{4}|\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\b\d{4}[/-]\d{1,2}[/-]\d{1,2}\b'
     time_pattern = r'\b\d{1,2}:\d{2}\s?(?:AM|PM|am|pm)?|\b\d{1,2}\s?(?:AM|PM|am|pm)\b'
