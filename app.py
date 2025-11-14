@@ -4,6 +4,7 @@ from flask import Flask, render_template, flash, request, redirect, url_for, sen
 from werkzeug.utils import secure_filename
 from pdf_extractor import extract_text_from_pdf
 from nlp_extraction import nlp_extractor
+from image_extraction import image_extractor
 
 UPLOAD_FOLDER = 'uploads/'
 DOWNLOAD_FOLDER = 'downloads/'

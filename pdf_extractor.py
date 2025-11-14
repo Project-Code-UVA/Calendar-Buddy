@@ -7,8 +7,12 @@ def extract_text_from_pdf(pdf_path):
     with pymupdf.open(pdf_path) as doc:
         for page in doc:
             page_text = page.get_text().replace(u"\u200b", "")
-            text += page_text + "\n"
+            page_text = re.sub("\n", " ", page_text)
+            text += page_text + " "
     return text
+
+print (extract_text_from_pdf("pdfs/ExamplePDFviaChat.pdf"))
+
 
 # the following are not used in app.py but could be useful for extracting meeting details
 def extract_meeting_details(text):
@@ -52,6 +56,6 @@ def extract_meeting_info_to_txt(pdf_path, output_txt_path="meeting_details.txt")
 
 
 # Example usage:
-if __name__ == "__main__":
-    extract_meeting_info_to_txt("/Users/jcrowley/Projects/Calendar Buddy/Calendar-Buddy/ExamplePDFviaChat.pdf", "/Users/jcrowley/Projects/Calendar Buddy/Calendar-Buddy/exampleOutput.txt")
+#if __name__ == "__main__":
+   # extract_meeting_info_to_txt("/Users/jcrowley/Projects/Calendar Buddy/Calendar-Buddy/ExamplePDFviaChat.pdf", "/Users/jcrowley/Projects/Calendar Buddy/Calendar-Buddy/exampleOutput.txt")
 
