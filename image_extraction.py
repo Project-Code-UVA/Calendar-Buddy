@@ -76,4 +76,3 @@ def image_extractor(file_name):
         traceback.print_exc()
         sys.exit(1)
 
-image_extractor(img_path)
