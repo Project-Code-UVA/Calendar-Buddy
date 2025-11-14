@@ -5,9 +5,11 @@ import os, sys, shutil
 
 
 # Use path relative to this script
-BASE = Path(__file__).resolve().parent
-img_path = BASE / "uploads" / "1.png"
-def image_extractor(img_path):
+
+def image_extractor(file_name):
+    BASE = Path(__file__).resolve().parent
+    img_path = BASE / "uploads" / str(file_name)
+
     print("=" * 60)
     print("OCR Test: pytesseract image_to_string on 1.png")
     print("=" * 60)
