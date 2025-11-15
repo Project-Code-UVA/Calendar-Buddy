@@ -2,9 +2,9 @@ import os
 import secrets
 from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory, abort
 from werkzeug.utils import secure_filename
-from pdf_extractor import pdf_extractor
-from nlp_extraction import nlp_extractor
-from image_extraction import image_extractor
+from extractors.pdf_extractor import pdf_extractor
+from extractors.nlp_extraction import nlp_extractor
+from extractors.image_extraction import image_extractor
 
 UPLOAD_FOLDER = 'uploads/'
 DOWNLOAD_FOLDER = 'downloads/'

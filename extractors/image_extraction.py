@@ -2,11 +2,11 @@ from pathlib import Path
 from PIL import Image
 import pytesseract
 import os, sys
-from cleaner import cleaner
+from .cleaner import cleaner
 
 # Use path relative to this script
 def image_extractor(file_name):
-    BASE = Path(__file__).resolve().parent
+    BASE = Path(__file__).resolve().parent.parent
     img_path = BASE / str(file_name)
 
     print("=" * 60)
