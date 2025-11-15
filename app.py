@@ -2,7 +2,7 @@ import os
 import secrets
 from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory, abort
 from werkzeug.utils import secure_filename
-from pdf_extractor import extract_text_from_pdf
+from pdf_extractor import pdf_extractor
 from nlp_extraction import nlp_extractor
 from image_extraction import image_extractor
 
@@ -51,21 +51,23 @@ def uploads():
             # Process the uploaded file
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             if filename.rsplit('.', 1)[1].lower() == 'pdf':
-                text = extract_text_from_pdf(file_path)
+                text = pdf_extractor(file_path)
                 new_filename = filename.removesuffix('.pdf') + '.txt'
                 download_path = os.path.join(app.config['DOWNLOAD_FOLDER'], new_filename)
                 with open(download_path, "w") as f:
                     f.write(text)
-                
                 event_details = nlp_extractor(text)
                 flash(f'Extracted Event Details: {event_details}')
                 flash(f'New file saved as: {new_filename}')
 
                 return redirect(url_for('home', filename=new_filename)) # Redirect back to home after upload
-
+            elif filename.rsplit('.', 1)[1].lower() in ["png", "jpg", "jpeg"]:
+                text = image_extractor(file_path)
+                print (text)
             else:
                 flash('Only PDFs are supported right now')
                 return redirect(request.url)
+            
         
     return render_template('index.html', filename=filename)
 
@@ -77,6 +79,7 @@ def download_file(filename):
         return send_from_directory(downloads, filename, as_attachment=True)
     except FileNotFoundError:
         abort(400, 'File not found')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
