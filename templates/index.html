@@ -7,6 +7,17 @@ Home page
 
 {% block body %}
 <h1>Welcome to Calendar Buddy!</h1>
+{% if current_user.is_authenticated %}
+    <p>Hello, {{ current_user.name }}! Email: {{ current_user.email }}</p>
+    <div>
+        <p>Profile picture:</p>
+        <img src="{{ Current_user.profile_pic }}" alt="Google Profile Picture">
+    </div>
+    <a class="button" href="/logout">Logout</a>
+{% else %}
+    <a class="button" href="/login">Google Login</a>
+{% endif %}
+
 <h2>Upload new File</h2>
 <form method="post" enctype="multipart/form-data">
     <input type="file" name="file" accept=".pdf, .txt, .png, .jpg, .jpeg">

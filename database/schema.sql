@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS user;
 
 CREATE TABLE user(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    name TEXT UNIQUE NOT NULL,
+    email TEXT NOT NULL UNIQUE, 
+    profile_pic TEXT NOT NULL DEFAULT 'default.jpg',
 )
