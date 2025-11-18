@@ -1,20 +1,62 @@
 import os
+import json
+import sqlite3
+
 import secrets
 from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory, abort
 from werkzeug.utils import secure_filename
 from extractors.pdf_extractor import pdf_extractor
 from extractors.nlp_extraction import nlp_extractor
 from extractors.image_extraction import image_extractor
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user
+)
+from oauthlib.oauth2 import WebApplicationClient
+import requests
+from database.db import init_app
+
+# google login configuration
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "52505839374-j5o94mbmga0p284hqkm9p0a1kuuahjbq.apps.googleusercontent.com")
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "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")
+GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
 
 UPLOAD_FOLDER = 'uploads/'
 DOWNLOAD_FOLDER = 'downloads/'
 ALLOWED_EXTENSIONS = {'pdf', 'txt', 'png', 'jpg', 'jpeg'}
 
+# flask app setup
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max file size
 app.secret_key = secrets.token_hex(32) # generates a 64-character hexadecimal string
+app.config.from_mapping(
+    DATABASE = os.path.join(app.instance_path, "database.db")
+)
+# database setup
+try:
+    init_app(app)
+except sqlite3.OperationalError:
+    pass
+""" run the init-db command using <flask --app flaskr init-db> """
+
+# user session setup
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+
+
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
+
+# retrieve user from the db
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 def allowed_file(filename):
     # returns True if file has . and ends in an allowed extension
