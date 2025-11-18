@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS user;
 
 CREATE TABLE user(
-    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    name TEXT UNIQUE NOT NULL,
+    id TEXT PRIMARY KEY, 
+    name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE, 
-    profile_pic TEXT NOT NULL DEFAULT 'default.jpg',
+    profile_pic TEXT NOT NULL DEFAULT 'default.jpg'
 )

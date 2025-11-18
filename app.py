@@ -13,7 +13,8 @@ from flask_login import (
     current_user,
     login_required,
     login_user,
-    logout_user
+    logout_user,
+    UserMixin
 )
 from oauthlib.oauth2 import WebApplicationClient
 import requests
@@ -42,7 +43,7 @@ try:
     init_app(app)
 except sqlite3.OperationalError:
     pass
-""" run the init-db command using <flask --app flaskr init-db> """
+""" run the init-db command using <flask --app app init-db> """
 
 # user session setup
 login_manager = LoginManager()
@@ -55,7 +56,7 @@ def get_google_provider_cfg():
     except Exception as e:
         print (f"Error: {e}")
 
-class User:
+class User(UserMixin):
     def __init__(self, id, name, email, profile_pic):
         self.id = id
         self.name = name
@@ -66,7 +67,7 @@ class User:
     def get(id):
         db = get_db()
         user_row = db.execute(
-            "SELECT * FROM user WHERE id = ?", (id)
+            "SELECT * FROM user WHERE id = ?", (id,)
         ).fetchone()
 
         if user_row is None:
@@ -78,12 +79,13 @@ class User:
             email=user_row["email"],
             profile_pic=user_row["profile_pic"],
         )
+    
     @staticmethod
     def create(id, name, email, profile_pic):
-        db = get.db()
+        db = get_db()
         db.execute(
             "INSERT INTO user (id, name, email, profile_pic) VALUES (?, ?, ?, ?)",
-            id, name, email, profile_pic
+            (id, name, email, profile_pic)
         )
         db.commit()
 
@@ -196,7 +198,7 @@ def callback():
     )
 
     # parse tehe tokens
-    client.parse_request_body_response(json.dumps(token_response.json()))
+    client.parse_request_body_response(token_response.text) #json.dumps(token_response.json())
 
     # use tokens now to hit the url that gives the user profile info
     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
@@ -215,7 +217,10 @@ def callback():
 
     # create user in the db with this info
     user = User(
-        id = unique_id, name=users_name, email=users_email, profile_pic=picture
+        id=unique_id, 
+        name=users_name, 
+        email=users_email, 
+        profile_pic=picture
     )
     # if user doesnt exist, add it to the db
     if not User.get(unique_id):
@@ -224,13 +229,25 @@ def callback():
     login_user(user)
 
     # send user back to homepage 
-    return redirect(url_for("/"))
+    return redirect(url_for("home"))
 
 @app.route("/logout")
 @login_required # from flask-login and ensures only logged in users can access thsi endpoint
 def logout():
     logout_user()
-    return redirect(url_for("/"))
+    return redirect(url_for("home"))
+
+
+# for debugging: check all users in database
+@app.route("/users")
+def list_users():
+    db = get_db()
+    users = db.execute("SELECT * FROM user").fetchall() # fetchall returns a list of sqlite3.Row objects
+    print("---All Users in Database---")
+    for user in users:
+        print(f"ID: {user['id']}, Name: {user['name']}, Email: {user['email']}")
+
+    return "Users printed in terminal"
 
 if __name__ == "__main__":
     app.run(debug=True, ssl_context="adhoc")
