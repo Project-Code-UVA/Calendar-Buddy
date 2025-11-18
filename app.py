@@ -1,3 +1,8 @@
+""" Note: running app.py will produce 'no page found error' because
+flask automatically runs on http: but the google auth requires https.
+Make sure to change to https://... (not http://) on the url, then reload."""
+
+
 import os
 import json
 import sqlite3
