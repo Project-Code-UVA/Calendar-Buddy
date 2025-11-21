@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock title %}
+
+{% block body %}
+<div class="home-buttons">
+    <a href="{{ url_for('upload_page') }}" class="btn-large">Upload</a>
+    <a href="{{ url_for('upload_page') }}" class="btn-large">Calendar</a>
+</div>
+{% endblock body %}
