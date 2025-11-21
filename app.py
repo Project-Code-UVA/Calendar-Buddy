@@ -2,6 +2,9 @@
 flask automatically runs on http: but the google auth requires https.
 Make sure to change to https://... (not http://) on the url, then reload."""
 
+""" run the init-db command using <flask --app app init-db> """
+
+
 
 import os
 import json
@@ -44,11 +47,7 @@ app.config.from_mapping(
     DATABASE = os.path.join(app.instance_path, "database.db")
 )
 # database setup
-try:
-    init_app(app)
-except sqlite3.OperationalError:
-    pass
-""" run the init-db command using <flask --app app init-db> """
+init_app(app)
 
 # user session setup
 login_manager = LoginManager()
@@ -129,13 +128,16 @@ def uploads():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
+        
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename) # secure the filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) # save file to upload folder
             flash(f'File successfully uploaded. Filename: {filename}')
-
+            
             # Process the uploaded file
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file_to_db(filename, file_path)
+
             if filename.rsplit('.', 1)[1].lower() == 'pdf':
                 text = pdf_extractor(file_path)
                 new_filename = filename.removesuffix('.pdf') + '.txt'
@@ -156,6 +158,18 @@ def uploads():
             
         
     return render_template('index.html', filename=filename)
+
+def file_to_db(filename, file_path):
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute("INSERT INTO files (filename, filepath) VALUES (?, ?)",
+                       (filename, file_path))
+        db.commit()
+        flash("filepath added to database", "success")
+    except sqlite3.Error as e:
+        flash(f"database error: {e}", "error")
+    
 
 @app.route('/download/<path:filename>', methods=['GET', 'POST'])
 def download_file(filename):
@@ -242,7 +256,6 @@ def logout():
     logout_user()
     return redirect(url_for("home"))
 
-
 # for debugging: check all users in database
 @app.route("/users")
 def list_users():
@@ -251,8 +264,20 @@ def list_users():
     print("---All Users in Database---")
     for user in users:
         print(f"ID: {user['id']}, Name: {user['name']}, Email: {user['email']}")
+    print("---End---")
 
     return "Users printed in terminal"
+
+@app.route("/files")
+def list_files():
+    db = get_db()
+    files = db.execute("SELECT * FROM files").fetchall() # fetchall returns a list of sqlite3.Row objects
+    print("---All files in Database---")
+    for file in files:
+        print(f"ID: {file['id']}, filename: {file['filename']}, filepath: {file['filepath']}")
+    print("---End---")
+
+    return "files printed in terminal"
 
 if __name__ == "__main__":
     app.run(debug=True, ssl_context="adhoc")

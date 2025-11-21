@@ -5,4 +5,10 @@ CREATE TABLE user(
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE, 
     profile_pic TEXT NOT NULL DEFAULT 'default.jpg'
-)
+);
+
+CREATE TABLE files(
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    filename TEXT NOT NULL,
+    filepath TEXT NOT NULL
+);
