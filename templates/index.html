@@ -1,35 +1,57 @@
-{% extends "base.html" %} 
-<!-- Following the base.html layout -->
+{% extends "base.html" %}
 
-{% block title %}
-Home page
-{% endblock title %}
+{% block title %}Home Page{% endblock title %}
 
 {% block body %}
-<h1>Welcome to Calendar Buddy!</h1>
-<h2>Upload new File</h2>
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".pdf, .txt, .png, .jpg, .jpeg">
-    <input type="submit" value="Upload">
-</form>
 
-{% with messages = get_flashed_messages() %}
+<section id="upload-section" class="section">
+    <h2>Upload New File</h2>
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+        <input type="file" name="file" accept=".pdf, .txt, image/*">
+        <button type="submit" class="btn">Upload</button>
+    </form>
+    {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul>
+    <ul class="messages">
         {% for message in messages %}
         <li>{{ message }}</li>
         {% endfor %}
-        </ul>
+    </ul>
     {% endif %}
     {% endwith %}
+</section>
 
-    {% if filename %}
-    <h2> Download File </h2>
-    
-     
-    <a href="{{url_for('download_file', filename=filename)}}">
-        <button>Download {{ filename }}</button> 
-     </a>
-   {% endif %}
+<section id="calendar-section" class="section">
+    <h2>Calendar</h2>
+    <ul>
+        {% for file in uploaded_files %}
+        {% if file.extractedEvent %}
+        <li>
+            <strong>{{ file.extractedEvent.title }}</strong> —
+            {{ file.extractedEvent.date.strftime("%Y-%m-%d") }}
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% if not uploaded_files %}
+        <li>No events uploaded yet.</li>
+        {% endif %}
+    </ul>
+</section>
+
+<section id="history-section" class="section">
+    <h2>Upload History</h2>
+    <ul>
+        {% for file in uploaded_files %}
+        <li>
+            {{ file.filename }}
+            <a href="{{ url_for('download_file', filename=file.filename) }}" class="btn-link">Download</a>
+            <a href="{{ url_for('delete_file', file_id=file.id) }}" class="btn-link">Delete</a>
+        </li>
+        {% endfor %}
+        {% if not uploaded_files %}
+        <li>No files uploaded yet.</li>
+        {% endif %}
+    </ul>
+</section>
 
 {% endblock body %}
