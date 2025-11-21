@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Page{% endblock title %}
+
+{% block body %}
+<div class="tabs-css">
+
+    <!-- Tabs -->
+    <input type="radio" name="tab" id="tab-upload" checked>
+    <label for="tab-upload" class="tab-label">Upload</label>
+
+    <input type="radio" name="tab" id="tab-calendar">
+    <label for="tab-calendar" class="tab-label">Calendar</label>
+
+    <input type="radio" name="tab" id="tab-history">
+    <label for="tab-history" class="tab-label">History</label>
+
+    <!-- Upload Tab -->
+    <div class="tab-content" id="content-upload">
+        <h2>Upload File</h2>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".pdf, .txt, image/*">
+            <button type="submit" class="btn">Upload</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Calendar Tab -->
+    <div class="tab-content" id="content-calendar">
+        <h2>Calendar</h2>
+
+        <!-- Calendar grid -->
+        <div class="calendar-grid">
+            {% set event_dates = events | map(attribute='date') | list %}
+            {% for day in range(1,32) %}
+            {% set date_str = "{:04d}-{:02d}-{:02d}".format(now.year, now.month, day) %}
+            <input type="radio" name="selected-day" id="day-{{ day }}" {% if loop.first %}checked{% endif %}>
+            <label for="day-{{ day }}" class="calendar-day {% if date_str in event_dates %}has-event{% endif %}">
+                {{ day }}
+            </label>
+            {% endfor %}
+        </div>
+
+        <!-- Events display -->
+        <div class="calendar-events">
+            {% for day in range(1,32) %}
+            {% set date_str = "{:04d}-{:02d}-{:02d}".format(now.year, now.month, day) %}
+            {% set events_for_day = events | selectattr("date", "equalto", date_str) | list %}
+            <div class="day-events-container">
+                {% for event in events_for_day %}
+                <div class="event-card">
+                    <strong>{{ event.name }}</strong><br>
+                    {{ event.time }} – {{ event.location }}<br>
+                    {{ event.description }}
+                </div>
+                {% endfor %}
+                {% if events_for_day|length == 0 %}
+                <div class="event-card no-event">No events</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- History Tab -->
+    <div class="tab-content" id="content-history">
+        <h2>Upload History</h2>
+        <ul>
+            {% for file in uploaded_files %}
+            <li>
+                {{ file.filename }}
+                <a href="{{ url_for('download_file', filename=file.filename) }}" class="btn-link">Download</a>
+                <a href="{{ url_for('delete_file', file_id=file.id) }}" class="btn-link">Delete</a>
+            </li>
+            {% endfor %}
+            {% if not uploaded_files %}
+            <li>No files uploaded yet.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+</div>
+{% endblock body %}
