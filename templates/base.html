@@ -1,18 +1,31 @@
 <!DOCTYPE html>
-
-<!--This is the blueprint for all site pages-->
-
 <html lang="en">
 <head>
-    <title>{% block title %} {% endblock title %} -- Calendar Buddy </title> <!---Page Title will show for every page-->
-
+    <title>{% block title %}{% endblock title %} -- Calendar Buddy</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="{{url_for("static", filename="styles.css")}}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    {% block body %} {% endblock body %}
+
+<header class="header">
+    <div class="container">
+        <h1>CalendarBuddy</h1>
+        <nav class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('upload_page') }}">Upload</a>
+            <a href="{{ url_for('upload_page') }}">Calendar</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    {% block body %}{% endblock body %}
+</main>
+
+<footer class="footer">
+    <p>&copy; 2025 CalendarBuddy</p>
+</footer>
 
 </body>
 </html>
