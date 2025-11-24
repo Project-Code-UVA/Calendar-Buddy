@@ -3,14 +3,25 @@
 {% block title %}Home Page{% endblock title %}
 
 {% block body %}
+<h1>Welcome to Calendar Buddy!</h1>
+{% if current_user.is_authenticated %}
+    <p>Hello, {{ current_user.name }}! Email: {{ current_user.email }}</p>
+    <div>
+        <p>Profile picture:</p>
+        <img src="{{ current_user.profile_pic }}" alt="Google Profile Picture">
+    </div>
+    <a class="button" href="/logout">Logout</a>
+{% else %}
+    <a class="button" href="/login">Google Login</a>
+{% endif %}
 
-<section id="upload-section" class="section">
-    <h2>Upload New File</h2>
-    <form method="post" enctype="multipart/form-data" class="upload-form">
-        <input type="file" name="file" accept=".pdf, .txt, image/*">
-        <button type="submit" class="btn">Upload</button>
-    </form>
-    {% with messages = get_flashed_messages() %}
+<h2>Upload new File</h2>
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".pdf, .txt, .png, .jpg, .jpeg">
+    <input type="submit" value="Upload">
+</form>
+
+{% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul class="messages">
         {% for message in messages %}
