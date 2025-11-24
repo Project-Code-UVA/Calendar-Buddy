@@ -35,6 +35,7 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "GOCSPX-Kjh3yZgTGc
 GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
 
 UPLOAD_FOLDER = 'uploads/'
+DOWNLOAD_FOLDER = 'downloads/'
 ALLOWED_EXTENSIONS = {'pdf', 'txt', 'png', 'jpg', 'jpeg'}
 
 # flask app setup
