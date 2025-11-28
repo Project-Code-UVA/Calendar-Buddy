@@ -11,7 +11,16 @@ import json
 import sqlite3
 
 import secrets
-from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory, abort
+from flask import (
+    Flask, 
+    render_template, 
+    flash, 
+    request, 
+    redirect, 
+    url_for, 
+    send_from_directory, 
+    abort,
+    session)
 from werkzeug.utils import secure_filename
 from extractors.pdf_extractor import pdf_extractor
 from extractors.nlp_extraction import nlp_extractor
@@ -105,18 +114,17 @@ def allowed_file(filename):
     # returns True if file has . and ends in an allowed extension
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET", "POST"])
 def home():
-    filename = request.args.get('filename')
-    file_exists = False
-    if filename:
-        file_path = os.path.join(app.config['DOWNLOAD_FOLDER'], filename)
-        file_exists = os.path.exists(file_path)
+    if request.method == "GET":
+        filename = request.args.get('filename')
+        file_exists = False
+        if filename:
+            file_path = os.path.join(app.config['DOWNLOAD_FOLDER'], filename)
+            file_exists = os.path.exists(file_path)
 
-    return render_template('index.html', filename=filename if file_exists else None)
+        return render_template('index.html', filename=filename if file_exists else None)
 
-@app.route("/", methods=["POST"])
-def uploads():
     if request.method == "POST":
         # check if the post request has the file part
         if 'file' not in request.files: # request.files is a dictionary-like object containing uploaded files
@@ -135,36 +143,51 @@ def uploads():
             flash(f'File successfully uploaded. Filename: {filename}')
             
             # Process the uploaded file
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file_to_db(filename, file_path)
+            # get file path from upload folder
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename) 
 
+            # extract text for PDF
             if filename.rsplit('.', 1)[1].lower() == 'pdf':
                 text = pdf_extractor(file_path)
-                new_filename = filename.removesuffix('.pdf') + '.txt'
-                download_path = os.path.join(app.config['DOWNLOAD_FOLDER'], new_filename)
-                with open(download_path, "w") as f:
-                    f.write(text)
-                event_details = nlp_extractor(text)
-                flash(f'Extracted Event Details: {event_details}')
-                flash(f'New file saved as: {new_filename}')
 
-                return redirect(url_for('home', filename=new_filename)) # Redirect back to home after upload
+            # extract text for image
             elif filename.rsplit('.', 1)[1].lower() in ["png", "jpg", "jpeg"]:
                 text = image_extractor(file_path)
-                print (text)
-            else:
-                flash('Only PDFs are supported right now')
-                return redirect(request.url)
             
-        
+            else:
+                flash('Text extraction unsuccessful. File type is not supported.')
+                return redirect(request.url) 
+            
+            # parse text 
+            event_details = nlp_extractor(text) 
+            """event_details should be a json file? -- nlp_extractor needs to be fixed"""
+
+            flash(f'Extracted Event Details: {event_details}')
+            
+            # generate ics file 
+            ics_filepath, calendar_name = generate_ics_file(event_details)
+
+            # save ics file to database
+            if 'user_id' in session:
+                user_id = current_user.get_id()
+                username = current_user.username()
+                try:
+                    file_to_db(user_id, calendar_name, ics_filepath)
+                except Exception as e:
+                    return "Error: {e}"
+                
+                flash(f'{username} with ID {user_id} saved new file as: {calendar_name}. Filepath: {ics_filepath}')
+                        
+            return redirect(url_for('home', filename=calendar_name)) # Redirect back to home after upload
+
     return render_template('index.html', filename=filename)
 
-def file_to_db(filename, file_path):
+def file_to_db(user_id, filename, file_path):
     db = get_db()
     cursor = db.cursor()
     try:
-        cursor.execute("INSERT INTO files (filename, filepath) VALUES (?, ?)",
-                       (filename, file_path))
+        cursor.execute("INSERT INTO files (user_id, filename, filepath) VALUES (?, ?, ?)",
+                       (user_id, filename, file_path))
         db.commit()
         flash("filepath added to database", "success")
     except sqlite3.Error as e:
@@ -249,6 +272,7 @@ def callback():
 
     # send user back to homepage 
     return redirect(url_for("home"))
+
 
 @app.route("/logout")
 @login_required # from flask-login and ensures only logged in users can access thsi endpoint

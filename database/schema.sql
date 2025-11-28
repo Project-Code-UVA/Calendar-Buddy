@@ -9,6 +9,7 @@ CREATE TABLE user(
 
 CREATE TABLE files(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    user_id TEXT,
     filename TEXT NOT NULL,
     filepath TEXT NOT NULL
 );
