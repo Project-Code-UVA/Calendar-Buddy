@@ -1,6 +1,8 @@
 # ignore stuff in uploads and downloads 
 downloads/*
 uploads/*
+!downloads/.gitkeep
+!uploads/.gitkeep
 
 # ignore database 
 instance/*
