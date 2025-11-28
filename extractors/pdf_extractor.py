@@ -1,5 +1,5 @@
 import pymupdf  # PyMuPDF
-from .cleaner import cleaner
+from cleaner import cleaner
 
 # used in APP.PY to extract text from pdf
 def pdf_extractor(pdf_path):
@@ -9,3 +9,4 @@ def pdf_extractor(pdf_path):
             page_text = page.get_text()
             text += page_text + " "
     return cleaner(text)
+
