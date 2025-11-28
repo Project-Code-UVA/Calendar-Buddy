@@ -26,7 +26,7 @@ def parse_dates(file_name="complicated_sample.txt"):
             else:
                 print("No date found")
     for event, date in parsed_events.items():
-        print(f"Event: {event} => Date: {list(date)}")
+        return (f"Event: {event} => Date: {list(date)}")
 
 
 if __name__ == "__main__":

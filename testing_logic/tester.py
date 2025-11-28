@@ -11,8 +11,6 @@ def test_nlp_extractor_on_pdf():
     file = "January 1, 2024"
     spacy_events = spacy_date(file)
     print(spacy_events)
-
-def write_txt():
     
 
 
