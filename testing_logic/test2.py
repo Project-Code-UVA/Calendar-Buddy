@@ -1,1 +1,0 @@
-print('Scene 1\nSynopsis:\nThree witches plan to meet Macbeth.\nThunder and Lightning. Enter three Witches.\n\nFIRST WITCH\n\nWhen shall we three meet again?\n\nIn thunder, lightning, or in rain?\nSECOND WITCH\n\nWhen the hurly-burly’s done,\n\nWhen the battle’s lost and won.\nTHIRD WITCH\n\nThat will be ere the set of sun.\n')
