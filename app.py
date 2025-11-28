@@ -36,6 +36,7 @@ from flask_login import (
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 from database.db import init_app, get_db
+from ics_logic.generate_ics_file import generate_ics_file
 
 # google login configuration
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "52505839374-j5o94mbmga0p284hqkm9p0a1kuuahjbq.apps.googleusercontent.com")
@@ -138,7 +139,7 @@ def home():
             return redirect(request.url)
         
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename) # secure the filename
+            filename = (secure_filename(file.filename)).lower() # secure the filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) # save file to upload folder
             flash(f'File successfully uploaded. Filename: {filename}')
             
@@ -148,46 +149,79 @@ def home():
 
             # extract text for PDF
             if filename.rsplit('.', 1)[1].lower() == 'pdf':
-                text = pdf_extractor(file_path)
+                text = None
+                try:
+                    text = pdf_extractor(file_path)
+                except Exception as e:
+                    print(f"error: {e}")
 
             # extract text for image
             elif filename.rsplit('.', 1)[1].lower() in ["png", "jpg", "jpeg"]:
-                text = image_extractor(file_path)
+                text = None
+                try:
+                    text = image_extractor(file_path)
+                except Exception as e:
+                    print(f"error: {e}")
             
+            elif filename.rsplit('.', 1)[1].lower() == 'txt':
+                text = None
+                try:
+                    with open(file_path, 'r') as f:
+                        text = f.read()
+                except Exception as e:
+                    print(f"error: {e}")
+                    flash("could not read text file")
+                
             else:
                 flash('Text extraction unsuccessful. File type is not supported.')
                 return redirect(request.url) 
             
             # parse text 
-            event_details = nlp_extractor(text) 
-            """event_details should be a json file? -- nlp_extractor needs to be fixed"""
+            if text:
+                event_details = nlp_extractor(text) 
+                """event_details should be a json file? -- nlp_extractor needs to be fixed"""
 
-            flash(f'Extracted Event Details: {event_details}')
-            
-            # generate ics file 
-            ics_filepath, calendar_name = generate_ics_file(event_details)
-
-            # save ics file to database
-            if 'user_id' in session:
-                user_id = current_user.get_id()
-                username = current_user.username()
-                try:
-                    file_to_db(user_id, calendar_name, ics_filepath)
-                except Exception as e:
-                    return "Error: {e}"
+                flash(f'Extracted Event Details: {event_details}')
                 
-                flash(f'{username} with ID {user_id} saved new file as: {calendar_name}. Filepath: {ics_filepath}')
-                        
-            return redirect(url_for('home', filename=calendar_name)) # Redirect back to home after upload
+                # generate ics file 
+                
 
-    return render_template('index.html', filename=filename)
+                # save ics file to database
+                if current_user.is_authenticated:
+                    user_id = current_user.get_id()
 
-def file_to_db(user_id, filename, file_path):
+                    new_filename = os.path.splitext(filename)[0] + "_" + user_id + ".ics"
+                    download_path = os.path.join(app.config['DOWNLOAD_FOLDER'], new_filename)
+
+                    generate_ics_file(download_path, event_details)
+
+                    try:
+                        file_to_db(user_id, new_filename, file_path, download_path)
+                    except Exception as e:
+                        return f"Error: {e}"
+                    
+                    flash(f'{current_user.name} with ID {user_id} saved new file as: {new_filename}. Filepath: {download_path}')
+                else: 
+                    new_filename = os.path.splitext(filename)[0] + ".ics"
+                    download_path = os.path.join(app.config['DOWNLOAD_FOLDER'], new_filename)
+                    
+                    generate_ics_file(download_path, event_details)
+
+                    try:
+                        file_to_db(filename=new_filename, old_name=file_path, file_path=download_path, user_id=None)
+                    except Exception as e:
+                        return f"Error: {e}"
+                    flash(f'Guest saved new file as: {new_filename}. Filepath: {download_path}')
+                return redirect(url_for('home', filename=new_filename, file_ready=True)) # Redirect back to home after upload
+
+    return render_template('index.html', filename=filename, file_ready=False)
+
+def file_to_db(user_id, filename, old_name, file_path):
     db = get_db()
     cursor = db.cursor()
     try:
-        cursor.execute("INSERT INTO files (user_id, filename, filepath) VALUES (?, ?, ?)",
-                       (user_id, filename, file_path))
+        cursor.execute("INSERT INTO files (user_id, filename, filepath, old_name) VALUES (?, ?, ?, ?)",
+                       (user_id, filename, file_path, old_name))
         db.commit()
         flash("filepath added to database", "success")
     except sqlite3.Error as e:
@@ -281,8 +315,8 @@ def logout():
     return redirect(url_for("home"))
 
 # for debugging: check all users in database
-@app.route("/users")
-def list_users():
+@app.route("/db")
+def list_users_and_files():
     db = get_db()
     users = db.execute("SELECT * FROM user").fetchall() # fetchall returns a list of sqlite3.Row objects
     print("---All Users in Database---")
@@ -290,18 +324,59 @@ def list_users():
         print(f"ID: {user['id']}, Name: {user['name']}, Email: {user['email']}")
     print("---End---")
 
-    return "Users printed in terminal"
-
-@app.route("/files")
-def list_files():
-    db = get_db()
     files = db.execute("SELECT * FROM files").fetchall() # fetchall returns a list of sqlite3.Row objects
     print("---All files in Database---")
     for file in files:
-        print(f"ID: {file['id']}, filename: {file['filename']}, filepath: {file['filepath']}")
+        print(f"ID: {file['id']}, User_ID: {file['user_id']}, filename: {file['filename']}, filepath: {file['filepath']}, old filepath: {file['old_name']}")
     print("---End---")
 
-    return "files printed in terminal"
+    return "users and files printed in terminal"
+
+@app.route("/admin/cleanup")
+def cleanup_db():
+    db = get_db()
+    cursor = db.cursor()
+
+    # retrieve file_paths
+    cursor.execute("SELECT filepath, old_name FROM files WHERE user_id IS NULL")
+    rows = cursor.fetchall()
+    filepaths = [row[0] for row in rows]
+    old_files = [row[1] for row in rows]
+    deleted_files = []
+    for filepath in filepaths: 
+        if os.path.exists(filepath):
+            try:
+                os.remove(filepath)
+                flash (f"successfully removed {filepath} from downloads folder")
+                deleted_files.append(filepath)
+            except Exception as e:
+                flash (f"Error in deleting file {filepath}: {e}")
+                continue
+        else:
+            flash (f"file not found: {filepath}")
+            continue
+
+    for old_file in old_files: 
+        if os.path.exists(old_file):
+            try:
+                os.remove(old_file)
+                flash (f"successfully removed {old_file} from uploads folder")
+                deleted_files.append(old_file)
+            except Exception as e:
+                flash (f"Error in deleting file {old_file}: {e}")
+                continue
+        else:
+            flash (f"file not found: {old_file}")
+            continue
+
+
+    # delete file names from db 
+    db.execute("DELETE FROM files WHERE user_id IS NULL")
+    db.commit()
+    return f"removed {deleted_files} from db, uploads, downloads"
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, ssl_context="adhoc")

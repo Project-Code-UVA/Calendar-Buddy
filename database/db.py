@@ -18,7 +18,6 @@ def close_db(exception=None):
     db = g.pop("db", None)
 
     if db is not None:
-        db.execute("DELETE FROM files WHERE user_id IS NULL")
         db.close()
 
 def init_db():
@@ -41,24 +40,5 @@ sqlite3.register_converter(
 
 # registers the functions with application
 def init_app(app):
-    app.teardown_appcontext(cleanup_downloads)
     app.teardown_appcontext(close_db) # flask will close_db after returning response
     app.cli.add_command(init_db_command) # adds a new command that can be called with the flask command
-
-
-# file cleanup
-def cleanup_downloads():
-    db = get_db()
-    cursor = db.cursor()
-
-    # retrieve file_paths
-    cursor.execute("SELECT filepath FROM files WHERE user_id IS NULL")
-    filepaths = [row[0] for row in cursor.fetchall()]
-    for filepath in filepaths: 
-        if os.path.exists(filepath):
-            try:
-                os.remove(filepath)
-            except Exception as e:
-                print ("Error in deleting file {filepath}: {e}")
-        else:
-            print("file not found: {filepath}")
