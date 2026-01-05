@@ -1,3 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body{
-    background-color: lightskyblue;
+    background-color: #fef8f0;
+     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.header{
+    background-color: #0d7377;
+    padding: 40px 40px;
+    border-radius: 0 0 50px 50px; 
+    position: relative;   
+    margin-bottom: 40px;
+}
+
+.uploadSection{
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 50px 50px 50px 50px; 
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
+
+.buttonSection{
+    background-color: #ffa58f;
+    border-radius: 40px 40px 40px 40px; 
+    padding: 30px 30px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.output{
+    background-color: #b8e0d2;
+    padding: 30px 40px;
+    border-radius: 50px 50px 50px 50px; 
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.button-icon{
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    vertical-align: middle;
+    border-radius: 50%
+}
+
+h1{
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 5px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+h2{
+    color: #e0f5f1;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+h3{ 
+    font-size: 16;
+    font-weight: 500;
+    line-height: 1;
+    color: #2d3748;
+    margin-top: 10px; 
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+h4{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #64748b;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+
+button{
+    border-radius: 10px;
+    border:none;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.loginButton{
+    border-radius: 30px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding: 15px 20px;
+    background-color: #ea8c6f;
+    color: white;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.log{
+    color: #ffffff;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    position:absolute;
+    top: 90px;
+    right: 40px;
+    text-align: right; 
+}
+
+.download {
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.download:hover {
+    background-color: #45a049;
+}
+
+.uploadIcon{
+    width: 70px;
+    height: 70px;
+    margin-bottom: 20px;
+}
+
+.file{
+    display: none;
+}
+
+.file-label{
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 400;
+    border: none;
+    color: #64748b;
+    background-color: white;
+    padding: 8px 15px;
+    border-radius: 10px;
+}
+
+.file-name{
+    color:white;
+    margin-top: 10px;
+}
+
+.upload{
+    font-size: 16px;
+    font-weight: 400;
+    border: none;
+    color: #64748b;
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-left: 90%;
+   
+}
+
+.list{
+    color: #64748b;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 40px;
 }

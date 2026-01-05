@@ -1,3 +1,13 @@
+# ignore stuff in uploads and downloads 
+downloads/*
+uploads/*
+!downloads/.gitkeep
+!uploads/.gitkeep
+
+# ignore database 
+instance/*
+!instance/.gitkeep
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

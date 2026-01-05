@@ -1,0 +1,31 @@
+<h1> Admin </h1>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+
+    {% endif %}
+{% endwith %}
+
+<h2>Cleanup Results</h2>
+<table border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>File</th>
+            <th>Folder</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in cleanup_results %}
+        <tr>
+            <td>{{ result.file }}</td>
+            <td>{{ result.folder }}</td>
+            <td>{{ result.status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -6,30 +6,78 @@ Home page
 {% endblock title %}
 
 {% block body %}
-<h1>Welcome to Calendar Buddy!</h1>
-<h2>Upload new File</h2>
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".pdf, .txt, .png, .jpg, .jpeg">
-    <input type="submit" value="Upload">
-</form>
+<div class="header">
+    <h1>Welcome to CalendarBuddy!</h1>
+    <h2>Upload event files, extract details automatically, and manage your calendar!</h2>
+
+
+{% if current_user.is_authenticated %}
+    <p class="log">Hello, {{ current_user.name }}! <br>Email: {{ current_user.email }}</p>
+    <a class="loginButton" href="/logout">
+        <img src="{{ current_user.profile_pic }}" alt="" class="button-icon">Logout
+    </a>
+{% else %}
+    <a class="loginButton" href="/login">
+        <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Google Login
+    </a>
+{% endif %}
+</div>
+
+<div class="uploadSection">
+<h3>Upload New File</h3>
+<h4>Upload images or files containing event information. We'll analyze them to extract event details.</h4>
+<div class="buttonSection">
+    <img src="{{ url_for('static', filename='images/icons8-upload-48.png') }}" alt="" class="uploadIcon">
+
+    <form method="post" enctype="multipart/form-data">
+        <input id="file" type="file" class="file" name="file" accept=".pdf, .txt, .png, .jpg, .jpeg">
+        <label for="file" class="file-label">Select File</label>
+        <div id="file-name" class="file-name">No file selected</div>
+        <br>
+        <input type="submit" class= "upload" value="Upload">
+    </form>
+</div>
+</div>
+
 
 {% with messages = get_flashed_messages() %}
     {% if messages %}
+    <div class = output>
+        <h3>Output:</h3>
         <ul>
         {% for message in messages %}
-        <li>{{ message }}</li>
+        <li class="list">{{ message }}</li>
         {% endfor %}
+        <br>
+
         </ul>
+
     {% endif %}
     {% endwith %}
 
-    {% if filename %}
-    <h2> Download File </h2>
-    
-     
-    <a href="{{url_for('download_file', filename=filename)}}">
-        <button>Download {{ filename }}</button> 
+    {% if filename and file_ready %}
+
+    <a href="{{url_for('download_file', filename=filename)}}"
+       class="download"> 
+       Download {{ filename }}
      </a>
+
    {% endif %}
+    </div>
+    
+<script>
+document.getElementById("file").addEventListener("change", function() {
+    let display = document.getElementById("file-name");
+    if (!display) {
+        // Create the display element if it doesn't exist yet
+        display = document.createElement("span");
+        display.id = "file-name";
+        display.style.marginLeft = "10px";
+        this.insertAdjacentElement('afterend', display);
+    }
+    display.textContent = this.files.length > 0 ? this.files[0].name : "No file chosen";
+});
+</script>
+
 
 {% endblock body %}
