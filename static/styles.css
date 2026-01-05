@@ -121,11 +121,18 @@ button{
     text-align: right; 
 }
 
-.download{
-    margin-top: 20px;
-    padding: 10px 10px;
-    background-color: white;
-    color: #0d7377;
+.download {
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.download:hover {
+    background-color: #45a049;
 }
 
 .uploadIcon{

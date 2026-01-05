@@ -1,16 +1,35 @@
+""" JAN 5, 2026 UPDATES """
+
+""" 
+llama3.2 implemented as ai parsing. 
+to set up ollama -- (in your env)
+- pip install -r requirements.txt
+- install ollama on your computer
+- run ollama: <ollama serve>
+- <ollama run llama3.2> to download and run llama3.2
+
+then extractors/ai.py should work but im not sure
+
+CURRENT FUNCTIONALITIES
+- ok at parsing formulaic / structured pdf documents. havent tested imgs. pretty slow
+- /admin/cleanup page will clear your download/uploads folders and delete files saved in db
+- /db will print current users and files saved in db
+- legit .ics file generation (yay!)
+"""
+
 """ Note: running app.py will produce 'no page found error' because
 flask automatically runs on http: but the google auth requires https.
 Make sure to change to https://... (not http://) on the url, then reload."""
 
-""" run the init-db command using <flask --app app init-db> """
-
-
+""" initialize the database using <flask --app app init-db> (sets up blank database)"""
 
 import os
 import json
 import sqlite3
 
 import secrets
+
+# flask imports
 from flask import (
     Flask, 
     render_template, 
@@ -19,12 +38,18 @@ from flask import (
     redirect, 
     url_for, 
     send_from_directory, 
+    send_file, 
+    Response,
     abort,
     session)
 from werkzeug.utils import secure_filename
+
+# import extractors
 from extractors.pdf_extractor import pdf_extractor
-from extractors.nlp_extraction import nlp_extractor
 from extractors.image_extraction import image_extractor
+from extractors.ai import event_extractor
+
+# login imports
 from flask_login import (
     LoginManager,
     current_user,
@@ -36,7 +61,8 @@ from flask_login import (
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 from database.db import init_app, get_db
-from ics_logic.generate_ics_file import generate_ics_file
+
+from ics_logic.generate_ics_file import generate_ics, ics_to_file
 
 # google login configuration
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "52505839374-j5o94mbmga0p284hqkm9p0a1kuuahjbq.apps.googleusercontent.com")
@@ -119,12 +145,22 @@ def allowed_file(filename):
 def home():
     if request.method == "GET":
         filename = request.args.get('filename')
-        file_exists = False
-        if filename:
-            file_path = os.path.join(app.config['DOWNLOAD_FOLDER'], filename)
-            file_exists = os.path.exists(file_path)
+        file_ready = request.args.get('file_ready') == "True"
 
-        return render_template('index.html', filename=filename if file_exists else None)
+        file_exists = False
+
+        if filename and file_ready:
+            if current_user.is_authenticated:
+                file_path = os.path.join(app.config['DOWNLOAD_FOLDER'], filename)
+                file_exists = os.path.exists(file_path)
+            else:
+                file_exists = "event_details" in session
+
+        return render_template(
+            'index.html', 
+            filename=filename if file_exists else None,
+            file_ready=file_exists
+            ) 
 
     if request.method == "POST":
         # check if the post request has the file part
@@ -178,22 +214,20 @@ def home():
             
             # parse text 
             if text:
-                event_details = nlp_extractor(text) 
-                """event_details should be a json file? -- nlp_extractor needs to be fixed"""
-
-                flash(f'Extracted Event Details: {event_details}')
+                event_details = event_extractor(text) 
+                flash(f'Extracted Event Details: {json.dumps(event_details, indent=4)}')
                 
                 # generate ics file 
-                
-
                 # save ics file to database
                 if current_user.is_authenticated:
                     user_id = current_user.get_id()
 
-                    new_filename = os.path.splitext(filename)[0] + "_" + user_id + ".ics"
+                    new_filename = os.path.splitext(filename)[0] + "_" + user_id[:4] + ".ics"
                     download_path = os.path.join(app.config['DOWNLOAD_FOLDER'], new_filename)
 
-                    generate_ics_file(download_path, event_details)
+                    # create calendar and write to file on disk
+                    ics_str = generate_ics(event_details)
+                    ics_to_file(download_path, ics_str)
 
                     try:
                         file_to_db(user_id, new_filename, file_path, download_path)
@@ -203,15 +237,9 @@ def home():
                     flash(f'{current_user.name} with ID {user_id} saved new file as: {new_filename}. Filepath: {download_path}')
                 else: 
                     new_filename = os.path.splitext(filename)[0] + ".ics"
-                    download_path = os.path.join(app.config['DOWNLOAD_FOLDER'], new_filename)
-                    
-                    generate_ics_file(download_path, event_details)
+                    session["event_details"] = event_details
 
-                    try:
-                        file_to_db(filename=new_filename, old_name=file_path, file_path=download_path, user_id=None)
-                    except Exception as e:
-                        return f"Error: {e}"
-                    flash(f'Guest saved new file as: {new_filename}. Filepath: {download_path}')
+                    flash(f'Guest can download file as: {new_filename}')
                 return redirect(url_for('home', filename=new_filename, file_ready=True)) # Redirect back to home after upload
 
     return render_template('index.html', filename=filename, file_ready=False)
@@ -226,16 +254,37 @@ def file_to_db(user_id, filename, old_name, file_path):
         flash("filepath added to database", "success")
     except sqlite3.Error as e:
         flash(f"database error: {e}", "error")
-    
 
 @app.route('/download/<path:filename>', methods=['GET', 'POST'])
 def download_file(filename):
-    downloads = os.path.join(app.root_path, app.config['DOWNLOAD_FOLDER'])
-    print(f"Download path: {downloads}, filename: {filename}")
-    try:
-        return send_from_directory(downloads, filename, as_attachment=True)
-    except FileNotFoundError:
-        abort(400, 'File not found')
+    # logged in user -> file exists on disk
+    if current_user.is_authenticated:
+        downloads = os.path.join(app.root_path, app.config['DOWNLOAD_FOLDER'])
+        print(f"Download path: {downloads}, filename: {filename}")
+        try:
+            return send_from_directory(downloads, 
+                                       filename, 
+                                       as_attachment=True, 
+                                       mimetype="text/calendar"
+                                       )
+        except FileNotFoundError:
+            abort(400, 'File not found')
+    # guest -> regenerate file in memory
+    else:
+        event_details = session.get("event_details")
+
+        if not event_details:
+            abort(400, "No event data available")
+        
+        ics_str = generate_ics(event_details)
+
+        return Response(
+            ics_str,
+            mimetype="text/calendar",
+            headers={
+                "Content-Disposition": f"attachment; filename={filename}"
+            }
+        )
 
 @app.route("/login")
 def login():
@@ -332,50 +381,89 @@ def list_users_and_files():
 
     return "users and files printed in terminal"
 
+# clean up db and disk folders
 @app.route("/admin/cleanup")
 def cleanup_db():
     db = get_db()
-    cursor = db.cursor()
 
-    # retrieve file_paths
-    cursor.execute("SELECT filepath, old_name FROM files WHERE user_id IS NULL")
-    rows = cursor.fetchall()
-    filepaths = [row[0] for row in rows]
-    old_files = [row[1] for row in rows]
-    deleted_files = []
-    for filepath in filepaths: 
-        if os.path.exists(filepath):
-            try:
-                os.remove(filepath)
-                flash (f"successfully removed {filepath} from downloads folder")
-                deleted_files.append(filepath)
-            except Exception as e:
-                flash (f"Error in deleting file {filepath}: {e}")
+    UPLOAD_DIR = os.path.join(app.root_path, "uploads")
+    DOWNLOAD_DIR = os.path.join(app.root_path, "downloads")
+
+    rows = db.execute(
+        "SELECT filepath, old_name FROM files"
+    ).fetchall()
+
+    results = []
+
+    for filepath, old_file in rows:
+        for file, base_dir, label in [
+            (filepath, DOWNLOAD_DIR, "downloads"),
+            (old_file, UPLOAD_DIR, "uploads"),
+        ]:
+            if not file:
                 continue
-        else:
-            flash (f"file not found: {filepath}")
-            continue
 
-    for old_file in old_files: 
-        if os.path.exists(old_file):
-            try:
-                os.remove(old_file)
-                flash (f"successfully removed {old_file} from uploads folder")
-                deleted_files.append(old_file)
-            except Exception as e:
-                flash (f"Error in deleting file {old_file}: {e}")
+            abs_path = os.path.abspath(
+                os.path.join(app.root_path, file)
+            )
+
+            # security check
+            if os.path.commonpath([abs_path, base_dir]) != base_dir:
+                results.append({
+                    "file": file,
+                    "folder": label,
+                    "status": "Skipped (unsafe path)"
+                })
                 continue
-        else:
-            flash (f"file not found: {old_file}")
-            continue
 
+            if os.path.exists(abs_path):
+                try:
+                    os.remove(abs_path)
+                    results.append({
+                        "file": file,
+                        "folder": label,
+                        "status": "Deleted"
+                    })
+                except Exception as e:
+                    results.append({
+                        "file": file,
+                        "folder": label,
+                        "status": f"Error: {e}"
+                    })
+            else:
+                results.append({
+                    "file": file,
+                    "folder": label,
+                    "status": "File not found"
+                })
 
-    # delete file names from db 
-    db.execute("DELETE FROM files WHERE user_id IS NULL")
+    db.execute("DELETE FROM files")
     db.commit()
-    return f"removed {deleted_files} from db, uploads, downloads"
 
+    # PURGE UPLOAD FOLDER of guest files (not saved in db)
+    if os.path.isdir(UPLOAD_DIR):
+        for filename in os.listdir(UPLOAD_DIR):
+            abs_path = os.path.join(UPLOAD_DIR, filename)
 
+            # only delete files, never directories
+            if not os.path.isfile(abs_path):
+                continue
+            if filename == ".gitkeep":
+                continue
+
+            try:
+                os.remove(abs_path)
+                results.append({
+                    "file": f"uploads/{filename}",
+                    "status": "Deleted (guest upload)"
+                })
+            except Exception as e:
+                results.append({
+                    "file": f"uploads/{filename}",
+                    "status": f"Error: {e}"
+                })
+
+    return render_template("admin.html", cleanup_results=results)
 
 
 if __name__ == "__main__":

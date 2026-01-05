@@ -51,19 +51,20 @@ Home page
         <br>
 
         </ul>
+
     {% endif %}
     {% endwith %}
 
-    {% if filename %}
-    <h3> Download File </h3>
-    
-     
-    <a href="{{url_for('download_file', filename=filename)}}">
-        <button class="download">Download {{ filename }}</button> 
-     </a>
-     </div>
-   {% endif %}
+    {% if filename and file_ready %}
 
+    <a href="{{url_for('download_file', filename=filename)}}"
+       class="download"> 
+       Download {{ filename }}
+     </a>
+
+   {% endif %}
+    </div>
+    
 <script>
 document.getElementById("file").addEventListener("change", function() {
     let display = document.getElementById("file-name");
