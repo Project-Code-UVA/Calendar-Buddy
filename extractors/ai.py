@@ -30,10 +30,18 @@ def dedupe_events(events):
     unique = []
 
     for e in events:
-        key = (e['name'], e['date'], e['time'], e['loc'])
-        if key not in seen:
-            seen.add(key)
-            unique.append(e)
+        has_date = bool(e.get("date", "").strip()) # returns false if date is ""
+        has_time = bool(e.get("time", "").strip())
+
+        if has_date:
+            if not has_time:
+                e['time'] = "12:00 AM"
+
+        if has_date and has_time:
+            key = (e['name'], e['date'], e['time'], e['loc'])
+            if key not in seen:
+                seen.add(key)
+                unique.append(e)
 
     #json_string = json.dumps(unique, indent=4)
     return unique
@@ -112,18 +120,29 @@ def normalize_events(calendar):
 
 # EVENT EXTRACTOR BEGINS HERE
 SYSTEM_PROMPT = """
-You extract calendar events from text.
+You are an event extraction system.
 
-Rules:
-- Extract ONLY events explicitly present in the text
-- Do NOT infer event details
-- Do NOT fabricate event details
-- Do NOT mix and match event details
-- Input dates may take the form <March 1, 2025>, <March 1 2025>, <03/01/2025>, <3/1/2025>, or <1 March, 2025>
-- Each event must be unique
-- Stop after all events are extracted
-- Output dates as strings written in the prompt entry
-- Return ONLY valid JSON that matches the schema
+TASK:
+Identify ALL events mentioned in the document.
+This includes:
+- Explicit events (meetings, calls, deadlines)
+- Implicit events (due dates, deadlines, follow-ups)
+- Events implied by keywords such as:
+  "due", "deadline", "upcoming", "by", "before", "deliver", "submit"
+- Events implied by lists or tables where dates are given
+- Repeating events where the event name is implied but the date changes
+
+RULES:
+- Scan the entire document line by line
+- Do NOT stop after finding one event
+- If a date is mentioned, assume an event exists
+- If the event type is not stated, infer a reasonable title, such as: due: "Deadline", task list: "Task", standalone date: "Scheduled item"
+- Return ALL events in the JSON template given
+- Return an empty array only if no dates exist
+
+Keywords indicating events:
+due, deadline, upcoming, by, before, submit, deliver,
+review, discuss, meeting, call, session, presentation
 """
 
 def event_extractor(raw_text):
@@ -139,8 +158,10 @@ def event_extractor(raw_text):
     ], format=CalendarData.model_json_schema(),
     options={
         'temperature': 0,
-        'num_predict': 500, # hard stop at 500 tokens
+        'num_predict': 2000, # hard stop at 500 tokens
     })
+
+    print(response.message.content) # debugging
 
     calendar = CalendarData.model_validate_json(response.message.content)
     events = calendar.model_dump()
@@ -150,11 +171,17 @@ def event_extractor(raw_text):
 
     return normalized_events
 
-# example text for testing
-raw_text = """
-            Meeting #1: 28 SEPTEMBER 2025 / 10:00 AM / CONFERENCE ROOM 
-            Meeting #2: SEPTEMBER 30 2025 / 10:00-11:00 AM / CONFERENCE ROOM 
-            Meeting #3: SEPTEMBER 2, 2025 / 12-1 PM / CONFERENCE ROOM 
-            Meeting #4: 12/1/2025 at 11:00 AM 
-            Meeting #5: 1/3/2026 at 2:30 PM 
-        """
+def main():
+    from pdf_extractor import pdf_extractor
+    from image_extraction import image_extractor
+    import os
+    file = os.path.abspath("/home/jyx1586/Calendar-Buddy/pdfs/Example Meeting.pdf")
+    #raw_text = pdf_extractor(file)
+    #print (event_extractor(raw_text))
+
+    file2 = os.path.abspath("/home/jyx1586/Calendar-Buddy/pdfs/Screenshot 2026-02-05 180738.png")
+    text = (image_extractor(file2))
+    print(event_extractor(text))
+
+if __name__ == "__main__":
+    main()
