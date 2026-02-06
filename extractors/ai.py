@@ -53,7 +53,7 @@ def time_parser(time_str: str):
                     - Default the first time as the START time
                     - If only one time is found, return end_time: None
                     - If AM or PM not given:
-                        - If START times are between 1-4, assume PM
+                        - If START times are between 12-4, assume PM
                         - Else, assume 24-hour clock
                     - Return ONLY valid JSON that matches the schema
                     - Examples: 
