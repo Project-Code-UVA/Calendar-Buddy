@@ -46,7 +46,6 @@ from werkzeug.utils import secure_filename
 
 # import extractors
 from extractors.pdf_extractor import pdf_extractor
-from extractors.image_extraction import image_extractor
 from extractors.ai import event_extractor
 
 # login imports
