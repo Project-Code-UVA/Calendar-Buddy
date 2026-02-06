@@ -44,6 +44,7 @@ body{
     width: 95%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 40px;
 }
 
 .button-icon{
@@ -109,6 +110,19 @@ button{
     right: 20px;
     z-index: 10;
 }
+
+.home{
+    border-radius: 30px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding: 15px 20px;
+    background-color: #ea8c6f;
+    color: white;
+    position: absolute;
+    top: 20px;
+    right: 210px;
+    z-index: 10;
+}
+
 
 .log{
     color: #ffffff;

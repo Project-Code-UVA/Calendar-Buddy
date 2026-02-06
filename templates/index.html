@@ -18,9 +18,13 @@ Home page
     </a>
 {% else %}
     <a class="loginButton" href="/login">
-        <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Google Login
+        <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Google Login 
     </a>
 {% endif %}
+ <a class="home" href="{{ url_for('home_page') }}">
+       <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Home
+    </a> 
+
 </div>
 
 <div class="uploadSection">

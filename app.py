@@ -244,6 +244,11 @@ def home():
 
     return render_template('index.html', filename=filename, file_ready=False)
 
+@app.route("/home")
+def home_page():
+    return render_template("home.html")
+
+
 def file_to_db(user_id, filename, old_name, file_path):
     db = get_db()
     cursor = db.cursor()
