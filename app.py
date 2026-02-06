@@ -191,14 +191,6 @@ def home():
                 except Exception as e:
                     print(f"error: {e}")
 
-            # extract text for image
-            elif filename.rsplit('.', 1)[1].lower() in ["png", "jpg", "jpeg"]:
-                text = None
-                try:
-                    text = image_extractor(file_path)
-                except Exception as e:
-                    print(f"error: {e}")
-            
             elif filename.rsplit('.', 1)[1].lower() == 'txt':
                 text = None
                 try:
