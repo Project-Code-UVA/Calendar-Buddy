@@ -27,37 +27,46 @@ Home page
 
 </div>
 
-<div class="uploadSection">
-<h3>Upload New File</h3>
-<h4>Upload images or files containing event information. We'll analyze them to extract event details.</h4>
-<div class="buttonSection">
-    <img src="{{ url_for('static', filename='images/icons8-upload-48.png') }}" alt="" class="uploadIcon">
-
-    <form method="post" enctype="multipart/form-data">
-        <input id="file" type="file" class="file" name="file" accept=".pdf, .txt, .png, .jpg, .jpeg">
-        <label for="file" class="file-label">Select File</label>
-        <div id="file-name" class="file-name">No file selected</div>
-        <br>
-        <input type="submit" class= "upload" value="Upload">
-    </form>
-</div>
+<div class = "tab"> 
+         <div class = "tabButton" id="uploadTab">Upload</div>
+        <div class = "unclickTabButton" id="calendarTab"> Calendar</div>
+        <div class = "unclickTabButton" id="historyTab">History</div>
 </div>
 
+<section id = "body">
+    <div id ="uploadLayout">
 
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class = output>
-        <h3>Output:</h3>
-        <ul>
-        {% for message in messages %}
-        <li class="list">{{ message }}</li>
-        {% endfor %}
-        <br>
+        <div class="uploadSection">
+        <h3>Upload New File</h3>
+        <h4>Upload images or files containing event information. We'll analyze them to extract event details.</h4>
+        <div class="buttonSection">
+            <img src="{{ url_for('static', filename='images/icons8-upload-48.png') }}" alt="" class="uploadIcon">
 
-        </ul>
+            <form method="post" enctype="multipart/form-data">
+                <input id="file" type="file" class="file" name="file" accept=".pdf, .txt, .png, .jpg, .jpeg">
+                <label for="file" class="file-label">Select File</label>
+                <div id="file-name" class="file-name">No file selected</div>
+                <br>
+                <input type="submit" class= "upload" value="Upload">
+            </form>
+        </div>
+        </div>
 
-    {% endif %}
-    {% endwith %}
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class = output>
+                <h3>Output:</h3>
+                <ul>
+                {% for message in messages %}
+                <li class="list">{{ message }}</li>
+                {% endfor %}
+                <br>
+
+                </ul>
+
+            {% endif %}
+            {% endwith %}
 
     {% if filename and file_ready %}
     <table border="1" cellpadding="5">
@@ -81,10 +90,10 @@ Home page
         </tbody>
     </table>
 
-    <a href="{{url_for('download_file', filename=filename)}}"
-       class="download"> 
-       Download {{ filename }}
-     </a>
+            <a href="{{url_for('download_file', filename=filename)}}"
+            class="download"> 
+            Download {{ filename }}
+            </a>
 
      {% if current_user.is_authenticated %}
      <table border="1" cellpadding="5">
@@ -105,6 +114,25 @@ Home page
    {% endif %}
     </div>
     
+    </div>
+
+
+
+    <div id = "calendarLayout" style="display:none;">
+        <div class="uploadSection">
+            <h3>calendar tab test</h3>
+        </div>
+    </div>
+
+
+    <div id = "historyLayout" style="display:none;">
+        <div class="uploadSection">
+            <h3>history tab test</h3>
+        </div>
+    </div>
+
+</section>
+    
 <script>
 document.getElementById("file").addEventListener("change", function() {
     let display = document.getElementById("file-name");
@@ -117,6 +145,47 @@ document.getElementById("file").addEventListener("change", function() {
     }
     display.textContent = this.files.length > 0 ? this.files[0].name : "No file chosen";
 });
+
+// tab bar
+const uploadTab = document.getElementById("uploadTab");
+const calendarTab = document.getElementById("calendarTab");
+const historyTab = document.getElementById("historyTab");
+
+const uploadLayout = document.getElementById("uploadLayout");
+const historyLayout = document.getElementById("historyLayout");
+const calendarLayout = document.getElementById("calendarLayout");
+
+function showLayout (layout, activeTab){
+    uploadLayout.style.display = "none";
+    historyLayout.style.display = "none";
+    calendarLayout.style.display = "none";
+    
+    layout.style.display = "block";
+
+    uploadTab.classList.remove("tabButton");
+    uploadTab.classList.add("unclickTabButton");
+
+    historyTab.classList.remove("tabButton");
+    historyTab.classList.add("unclickTabButton");
+
+    calendarTab.classList.remove("tabButton");
+    calendarTab.classList.add("unclickTabButton");
+
+    activeTab.classList.remove("unclickTabButton");
+    activeTab.classList.add("tabButton");
+
+}
+
+uploadTab.addEventListener("click",()=>{
+    showLayout(uploadLayout, uploadTab);
+});
+calendarTab.addEventListener("click",()=>{
+    showLayout(calendarLayout, calendarTab);
+});
+historyTab.addEventListener("click",()=>{
+    showLayout(historyLayout,historyTab);
+});
+
 </script>
 
 
