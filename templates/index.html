@@ -66,7 +66,7 @@ Home page
                 </ul>
 
             {% endif %}
-            {% endwith %}
+        {% endwith %}
 
     {% if filename and file_ready %}
     <table border="1" cellpadding="5">
@@ -83,33 +83,17 @@ Home page
             <tr>
                 <td>{{ event["name"] }}</td>
                 <td>{{ event["start"].strftime("%Y-%m-%d") }}</td>
-                <td>{{ event["start"].strftime("%H:%m") }} to {{ event["end"].strftime("%H:%m") }} </td>
+                <td>{{ event["start"].strftime("%H:%M") }} to {{ event["end"].strftime("%H:%M") }} </td>
                 <td>{{ event["loc"] }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-            <a href="{{url_for('download_file', filename=filename)}}"
-            class="download"> 
-            Download {{ filename }}
-            </a>
-
-     {% if current_user.is_authenticated %}
-     <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>File Name</th>
-                <th>File ID</th>
-                <th>Download ICS</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-        </tbody>
-     </table>
-
-     {% endif %}
+        <a href="{{url_for('download_file', filename=filename)}}"
+        class="download"> 
+        Download {{ filename }}
+        </a>
 
    {% endif %}
     </div>
@@ -129,6 +113,33 @@ Home page
         <div class="uploadSection">
             <h3>history tab test</h3>
         </div>
+
+        {% if user_files %}
+            <p> user_files = {{ user_files }}</p>
+            <p> user_files length: {{ user_files|length }} </p>
+                <table border="1" cellpadding="5">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Download ICS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for file in user_files %}
+                        <tr>
+                            <td>{{ file }}</td>
+                            <td> download link </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        {% else %}
+                {% if current_user.is_authenticated %}
+                    <p>You have no files uploaded.</p>
+                {% else %}
+                    <p>Guest accounts have no history saved</p>
+                {% endif %}
+        {% endif %}
     </div>
 
 </section>

@@ -149,6 +149,16 @@ def index():
 
         event_json = session.get("event_details", [])
         print("session events:", session.get("event_details"))
+        
+        user_files = []
+        if current_user.is_authenticated:
+            user_id = current_user.get_id()
+
+            try:
+                user_files = get_user_files(user_id)
+                print(f"user files: {user_files}")
+            except Exception as e:
+                print("DB error, ", e)
 
         file_exists = False
 
@@ -163,7 +173,8 @@ def index():
             'index.html', 
             filename=filename if file_exists else None,
             file_ready=file_exists,
-            event_json=event_json
+            event_json=event_json,
+            user_files=user_files
             ) 
 
     if request.method == "POST":
@@ -245,6 +256,12 @@ def index():
                 return redirect(url_for('index', filename=new_filename, file_ready=True)) # Redirect back to home after upload
 
     return render_template('index.html', filename=filename, file_ready=False, event_json=event_details)
+
+def get_user_files(user_id):
+    db = get_db()
+    rows = db.execute("SELECT filename FROM files WHERE user_id=?",
+                   (user_id,)).fetchall()
+    return [r[0] for r in rows]
 
 @app.route("/home")
 def home_page():
@@ -361,14 +378,14 @@ def callback():
     login_user(user)
 
     # send user back to homepage 
-    return redirect(url_for("home"))
+    return redirect(url_for("index"))
 
 
 @app.route("/logout")
 @login_required # from flask-login and ensures only logged in users can access thsi endpoint
 def logout():
     logout_user()
-    return redirect(url_for("home"))
+    return redirect(url_for("index"))
 
 # for debugging: check all users in database
 @app.route("/db")
