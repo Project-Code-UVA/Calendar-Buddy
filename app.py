@@ -28,6 +28,7 @@ import json
 import sqlite3
 
 import secrets
+from datetime import datetime
 
 # flask imports
 from flask import (
@@ -46,7 +47,6 @@ from werkzeug.utils import secure_filename
 
 # import extractors
 from extractors.pdf_extractor import pdf_extractor
-from extractors.image_extraction import image_extractor
 from extractors.ai import event_extractor
 
 # login imports
@@ -142,10 +142,13 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/", methods=["GET", "POST"])
-def home():
+def index():
     if request.method == "GET":
         filename = request.args.get('filename')
         file_ready = request.args.get('file_ready') == "True"
+
+        event_json = session.get("event_details", [])
+        print("session events:", session.get("event_details"))
 
         file_exists = False
 
@@ -159,7 +162,8 @@ def home():
         return render_template(
             'index.html', 
             filename=filename if file_exists else None,
-            file_ready=file_exists
+            file_ready=file_exists,
+            event_json=event_json
             ) 
 
     if request.method == "POST":
@@ -191,14 +195,6 @@ def home():
                 except Exception as e:
                     print(f"error: {e}")
 
-            # extract text for image
-            elif filename.rsplit('.', 1)[1].lower() in ["png", "jpg", "jpeg"]:
-                text = None
-                try:
-                    text = image_extractor(file_path)
-                except Exception as e:
-                    print(f"error: {e}")
-            
             elif filename.rsplit('.', 1)[1].lower() == 'txt':
                 text = None
                 try:
@@ -214,8 +210,15 @@ def home():
             
             # parse text 
             if text:
-                event_details = event_extractor(text) 
-                flash(f'Extracted Event Details: {json.dumps(event_details, indent=4)}')
+                event_details = event_extractor(text)
+
+                # handle table generation 
+                export_details = [e.copy() for e in event_details]
+                for e in export_details:
+                    e["start"] = datetime.fromisoformat(e["start"])
+                    e["end"]   = datetime.fromisoformat(e["end"])
+                session["event_details"] = export_details
+                flash(f'Extracted Event Details: {json.dumps(event_details)}')
                 
                 # generate ics file 
                 # save ics file to database
@@ -237,12 +240,11 @@ def home():
                     flash(f'{current_user.name} with ID {user_id} saved new file as: {new_filename}. Filepath: {download_path}')
                 else: 
                     new_filename = os.path.splitext(filename)[0] + ".ics"
-                    session["event_details"] = event_details
-
+                    
                     flash(f'Guest can download file as: {new_filename}')
-                return redirect(url_for('home', filename=new_filename, file_ready=True)) # Redirect back to home after upload
+                return redirect(url_for('index', filename=new_filename, file_ready=True)) # Redirect back to home after upload
 
-    return render_template('index.html', filename=filename, file_ready=False)
+    return render_template('index.html', filename=filename, file_ready=False, event_json=event_details)
 
 @app.route("/home")
 def home_page():

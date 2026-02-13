@@ -68,7 +68,27 @@ Home page
             {% endif %}
             {% endwith %}
 
-            {% if filename and file_ready %}
+    {% if filename and file_ready %}
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in event_json %}
+            <tr>
+                <td>{{ event["name"] }}</td>
+                <td>{{ event["start"].strftime("%Y-%m-%d") }}</td>
+                <td>{{ event["start"].strftime("%H:%m") }} to {{ event["end"].strftime("%H:%m") }} </td>
+                <td>{{ event["loc"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
             <a href="{{url_for('download_file', filename=filename)}}"
             class="download"> 

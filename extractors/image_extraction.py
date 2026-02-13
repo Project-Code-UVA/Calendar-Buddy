@@ -1,30 +1,49 @@
-from pathlib import Path
 from PIL import Image
 import pytesseract
-import os, sys
-from .cleaner import cleaner
+import sys
+from cleaner import cleaner
+import cv2
+import numpy as np
 
-# Use path relative to this script
-def image_extractor(file_name):
-    BASE = Path(__file__).resolve().parent.parent
-    img_path = BASE / str(file_name)
-
-    print("=" * 60)
-    print("OCR Test: pytesseract image_to_string on 1.png")
-    print("=" * 60)
-    print(f"cwd:      {os.getcwd()}")
-    print(f"script:   {Path(__file__).resolve()}")
-    print(f"img_path: {img_path}")
-    print(f"exists:   {img_path.exists()}")
-    print()
-
-    print()
-    print("Opening image with PIL:")
+def preprocess(img_path):
     try:
-        img = Image.open(img_path)
-        print(f"  ✓ Image size: {img.size}")
-        print(f"  ✓ Image mode: {img.mode}")
-        print()
+        img = cv2.imread(img_path, 0)
+
+        # upscale
+        img = cv2.resize(img, None, fx=2, fy=2)
+
+        # denoise
+        img = cv2.medianBlur(img, 3)
+
+        # threshold
+        _, img = cv2.threshold(img, 0, 255,
+                            cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    except Exception as e:
+        print (f"Exception {e}")
+        sys.exit(1)
+
+    # deskew
+    coords = np.column_stack(np.where(img > 0))
+    angle = cv2.minAreaRect(coords)[-1]
+
+    if angle < -45:
+        angle = -(90 + angle)
+    else:
+        angle = -angle
+
+    (h, w) = img.shape[:2]
+    M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1.0)
+    deskewed = cv2.warpAffine(img, M, (w, h),
+                            flags=cv2.INTER_CUBIC,
+                            borderMode=cv2.BORDER_REPLICATE)
+
+    return deskewed
+
+def image_extractor(img_path):
+
+    processed_img = preprocess(img_path)
+    try:
+        img = processed_img
 
         print("Running OCR (pytesseract.image_to_string):")
         text = pytesseract.image_to_string(img, lang='eng', config='--psm 6')
@@ -49,3 +68,13 @@ def image_extractor(file_name):
         import traceback
         traceback.print_exc()
         sys.exit(1)
+
+    return text
+
+def main():
+    import os
+    file = os.path.abspath("/home/jyx1586/Calendar-Buddy/pdfs/Screenshot 2026-02-05 180738.png")
+    image_extractor(file)
+
+if __name__ == "__main__":
+    main()
