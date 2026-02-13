@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* sections*/
 body{
     background-color: #fef8f0;
      font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -38,7 +40,7 @@ body{
 }
 
 .output{
-    background-color: #b8e0d2;
+    background-color:  #d6eae6;
     padding: 30px 40px;
     border-radius: 50px 50px 50px 50px; 
     width: 95%;
@@ -47,6 +49,7 @@ body{
     margin-bottom: 40px;
 }
 
+/*icons*/
 .button-icon{
     width: 30px;
     height: 30px;
@@ -55,6 +58,13 @@ body{
     border-radius: 50%
 }
 
+.uploadIcon{
+    width: 70px;
+    height: 70px;
+    margin-bottom: 20px;
+}
+
+/* headings*/
 h1{
     color: #ffffff;
     font-size: 40px;
@@ -92,7 +102,7 @@ h4{
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-
+/*buttons*/
 button{
     border-radius: 10px;
     border:none;
@@ -111,6 +121,10 @@ button{
     z-index: 10;
 }
 
+.loginButton:hover{
+    background-color: #dc7e62;
+}
+
 .home{
     border-radius: 30px;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -121,6 +135,10 @@ button{
     top: 20px;
     right: 210px;
     z-index: 10;
+}
+
+.home:hover{
+    background-color: #dc7e62;
 }
 
 
@@ -149,12 +167,6 @@ button{
     background-color: #45a049;
 }
 
-.uploadIcon{
-    width: 70px;
-    height: 70px;
-    margin-bottom: 20px;
-}
-
 .file{
     display: none;
 }
@@ -168,6 +180,10 @@ button{
     background-color: white;
     padding: 8px 15px;
     border-radius: 10px;
+}
+
+.file-label:hover{
+    background-color: rgb(227, 227, 227);
 }
 
 .file-name{
@@ -188,9 +204,65 @@ button{
    
 }
 
+.upload:hover {
+    background-color: rgb(227, 227, 227);
+}
+
 .list{
     color: #64748b;
     margin-top: 20px;
     margin-bottom: 20px;
     margin-left: 40px;
+}
+
+
+/* tab stuff */
+.tab{
+    background-color: #d6eae6;
+     margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 40px;
+    margin-right: 70px;
+     border-radius: 100px;
+    padding-left: 1%;
+    padding-top: 0.4%;
+    padding-bottom:0.4%;
+     position: relative;
+     max-width: 45%;
+     list-style-type: none;
+     display:flex;
+}
+
+.tabButton{
+   font-size: 16px;
+    font-weight: 400;
+    border: none;
+    color: #2d3748;
+    background-color: white;
+    border-radius: 100px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-right: 20px;
+    width: 100px;
+    text-align: center;
+    display: block;
+}
+
+.unclickTabButton{
+   font-size: 16px;
+    font-weight: 400;
+    border: none;
+    color: #2d3748;
+      background-color: #d6eae6;
+    border-radius: 100px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-right: 20px;
+    width: 100px;
+    text-align: center;
+    display: block;
+}
+
+.unclickTabButton:hover {
+    background-color: white;
 }
