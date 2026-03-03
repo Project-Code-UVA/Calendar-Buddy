@@ -141,7 +141,7 @@ def allowed_file(filename):
     # returns True if file has . and ends in an allowed extension
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"], endpoint= "home")
 def index():
     if request.method == "GET":
         filename = request.args.get('filename')

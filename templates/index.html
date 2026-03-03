@@ -6,6 +6,8 @@ Home page
 {% endblock title %}
 
 {% block body %}
+
+
 <div class="header">
     <h1>Welcome to CalendarBuddy!</h1>
     <h2>Upload event files, extract details automatically, and manage your calendar!</h2>
@@ -33,6 +35,8 @@ Home page
         <div class = "unclickTabButton" id="historyTab">History</div>
 </div>
 
+
+
 <section id = "body">
     <div id ="uploadLayout">
 
@@ -42,14 +46,19 @@ Home page
         <div class="buttonSection">
             <img src="{{ url_for('static', filename='images/icons8-upload-48.png') }}" alt="" class="uploadIcon">
 
-            <form method="post" enctype="multipart/form-data">
+            <form id="uploadForm" method="post" enctype="multipart/form-data">
                 <input id="file" type="file" class="file" name="file" accept=".pdf, .txt, .png, .jpg, .jpeg">
                 <label for="file" class="file-label">Select File</label>
                 <div id="file-name" class="file-name">No file selected</div>
                 <br>
-                <input type="submit" class= "upload" value="Upload">
+                <input type="submit" class= "upload" value="Upload" id = "uploadBtn">
             </form>
         </div>
+
+            <div class="progressBar">
+                <div id = "bar" class="bar"></div>
+            </div>
+          
         </div>
 
 
@@ -169,6 +178,39 @@ calendarTab.addEventListener("click",()=>{
 historyTab.addEventListener("click",()=>{
     showLayout(historyLayout,historyTab);
 });
+
+//progress bar
+const form = document.getElementById("uploadForm");
+
+form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    progressStart();
+
+    const formData = new FormData(form);
+
+    fetch(window.location.href, {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(html => {
+
+        // wait for the animation to finish
+        setTimeout(() => {
+            document.open();
+            document.write(html);
+            document.close();
+        }, 5000); // must match your CSS animation time
+    });
+});
+
+const progressStart = () =>{
+    const bar = document.getElementById("bar");
+    bar.classList.remove("playAnimation");
+    void bar.offsetWidth;
+    bar.classList.add("playAnimation");
+}
 
 </script>
 
