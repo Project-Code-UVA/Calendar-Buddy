@@ -1,6 +1,10 @@
 {% extends "base.html" %} 
 <!-- Following the base.html layout -->
 
+<!-- current issue w progress bar:
+        animation currently does not reflect actual loading time
+ -->
+
 {% block title %}
 Home page
 {% endblock title %}
@@ -64,7 +68,7 @@ Home page
 
         {% with messages = get_flashed_messages() %}
             {% if messages %}
-            <div class = output>
+            <div class = "output">
                 <h3>Output:</h3>
                 <ul>
                 {% for message in messages %}
@@ -182,36 +186,14 @@ historyTab.addEventListener("click",()=>{
 //progress bar
 const form = document.getElementById("uploadForm");
 
-form.addEventListener("submit", function (e) {
-    e.preventDefault();
+form.addEventListener("submit", function () {
 
-    progressStart();
-
-    const formData = new FormData(form);
-
-    fetch(window.location.href, {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.text())
-    .then(html => {
-
-        // wait for the animation to finish
-        setTimeout(() => {
-            document.open();
-            document.write(html);
-            document.close();
-        }, 5000); // must match your CSS animation time
-    });
-});
-
-const progressStart = () =>{
     const bar = document.getElementById("bar");
     bar.classList.remove("playAnimation");
     void bar.offsetWidth;
     bar.classList.add("playAnimation");
-}
 
+});
 </script>
 
 

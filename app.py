@@ -242,7 +242,7 @@ def index():
                     new_filename = os.path.splitext(filename)[0] + ".ics"
                     
                     flash(f'Guest can download file as: {new_filename}')
-                return redirect(url_for('index', filename=new_filename, file_ready=True)) # Redirect back to home after upload
+                return redirect(url_for('home', filename=new_filename, file_ready=True)) # Redirect back to home after upload
 
     return render_template('index.html', filename=filename, file_ready=False, event_json=event_details)
 
