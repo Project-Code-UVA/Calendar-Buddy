@@ -187,11 +187,35 @@ historyTab.addEventListener("click",()=>{
 const form = document.getElementById("uploadForm");
 
 form.addEventListener("submit", function () {
-
     const bar = document.getElementById("bar");
-    bar.classList.remove("playAnimation");
+
+    //slow animation
+    bar.style.transition = "";
+    bar.style.width = "0%";
+    bar.classList.remove("playSlow");
     void bar.offsetWidth;
-    bar.classList.add("playAnimation");
+    bar.classList.add("playSlow");
+
+    //fast animation
+    const formData = new FormData(from);
+    fetch (window.loation.href,{
+        method:"POST",
+        body:formData
+    })
+
+    .then (res => res.text())
+    .then (html => {
+        bar.classList.remove("playSlow");
+         bar.style.width = "90%";
+        void bar.offsetWidth;
+        bar.classList.add("playFast");
+
+        setTimeout (()=> {
+            document.open();
+            document.write(html);
+            document.close();
+        }, 400);
+    });
 
 });
 </script>
