@@ -1,4 +1,4 @@
-from ollama import chat
+from ollama import generate
 from pydantic import BaseModel
 from dateutil import parser
 from datetime import datetime, timedelta
@@ -70,20 +70,14 @@ def time_parser(time_str: str):
                         input="2:30-5:30" -> output = ("2:30 PM", "5:30 PM"),
                         input="10 AM" -> output = ("10:00 AM", None)
                     """
-    response = chat(model='llama3.2', messages= [
-        {
-            'role': 'system', 'content': SYSTEM_PROMPT
-        },
-        {
-            'role': 'user', 
-            'content': time_str,
-        }
-    ], 
-    options={
-        'temperature': 0,
-        'num_predict': 30,
-    }, format=Duration.model_json_schema())
-    duration = Duration.model_validate_json(response.message.content).model_dump()
+    response = generate(model='llama3.2', prompt=time_str, 
+                        system=SYSTEM_PROMPT,
+                        options={
+                            'temperature': 0,
+                            'num_predict': 30,
+                         }, 
+                         format=Duration.model_json_schema())
+    duration = Duration.model_validate_json(response.response).model_dump()
     return duration
 
 def normalize_events(calendar):
@@ -147,23 +141,18 @@ review, discuss, meeting, call, session, presentation
 
 def event_extractor(raw_text):
 
-    response = chat(model='llama3.2', messages= [
-        {
-            'role': 'system', 'content': SYSTEM_PROMPT
-        },
-        {
-            'role': 'user', 
-            'content': raw_text,
-        }
-    ], format=CalendarData.model_json_schema(),
+    response = generate(model='llama3.2', 
+                        prompt=raw_text, 
+                        system=SYSTEM_PROMPT,
+                        format=CalendarData.model_json_schema(),
     options={
         'temperature': 0,
-        'num_predict': 2000, # hard stop at 500 tokens
+        'num_predict': 2000, # hard stop at 2000 tokens
     })
 
-    print(response.message.content) # debugging
+    print("Time taken to generate response: ", response.total_duration, "\n\n") # debugging
 
-    calendar = CalendarData.model_validate_json(response.message.content)
+    calendar = CalendarData.model_validate_json(response.response)
     events = calendar.model_dump()
 
     deduped_events = dedupe_events(events['events'])
@@ -172,8 +161,8 @@ def event_extractor(raw_text):
     return normalized_events
 
 def main():
-    from pdf_extractor import pdf_extractor
-    from image_extraction import image_extractor
+    from .pdf_extractor import pdf_extractor
+    from .image_extraction import image_extractor
     import os
     file = os.path.abspath("/home/jyx1586/Calendar-Buddy/pdfs/Example Meeting.pdf")
     #raw_text = pdf_extractor(file)
