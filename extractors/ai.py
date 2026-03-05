@@ -161,7 +161,7 @@ def event_extractor(raw_text):
         'num_predict': 2000, # hard stop at 500 tokens
     })
 
-    print(response.message.content) # debugging
+    print("\nTime to generate response: ", response.total_duration, "\n\n") # debugging
 
     calendar = CalendarData.model_validate_json(response.message.content)
     events = calendar.model_dump()
@@ -172,8 +172,8 @@ def event_extractor(raw_text):
     return normalized_events
 
 def main():
-    from pdf_extractor import pdf_extractor
-    from image_extraction import image_extractor
+    from .pdf_extractor import pdf_extractor
+    from .image_extraction import image_extractor
     import os
     file = os.path.abspath("/home/jyx1586/Calendar-Buddy/pdfs/Example Meeting.pdf")
     #raw_text = pdf_extractor(file)

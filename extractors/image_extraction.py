@@ -1,7 +1,7 @@
 from PIL import Image
 import pytesseract
 import sys
-from cleaner import cleaner
+from .cleaner import cleaner
 import cv2
 import numpy as np
 
