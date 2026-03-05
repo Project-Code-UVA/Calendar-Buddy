@@ -2,6 +2,8 @@ from ollama import generate
 from pydantic import BaseModel
 from dateutil import parser
 from datetime import datetime, timedelta
+from tqdm import tqdm
+import tiktoken
 
 class EventData(BaseModel):
     name: str 
@@ -70,14 +72,23 @@ def time_parser(time_str: str):
                         input="2:30-5:30" -> output = ("2:30 PM", "5:30 PM"),
                         input="10 AM" -> output = ("10:00 AM", None)
                     """
+    token_estimate = count_tokens(time_str)
+    if token_estimate + 15 < 30:
+        max_tokens = token_estimate + 15 # setting arbitrary uncertainty for the token_estimate
+    else:
+        max_tokens = 30
     response = generate(model='llama3.2', prompt=time_str, 
                         system=SYSTEM_PROMPT,
+                        stream=True,
                         options={
                             'temperature': 0,
-                            'num_predict': 30,
+                            'num_predict': max_tokens,
                          }, 
                          format=Duration.model_json_schema())
-    duration = Duration.model_validate_json(response.response).model_dump()
+    
+    full_response, final_metrics = progressbar(response, max_tokens, "Validating Times")
+
+    duration = Duration.model_validate_json(full_response).model_dump()
     return duration
 
 def normalize_events(calendar):
@@ -111,6 +122,39 @@ def normalize_events(calendar):
         
     return normalized
 
+# PROGRESS BAR
+def progressbar(stream, max_tokens, description):
+    pbar = tqdm(total=max_tokens, unit= "tokens", desc=description)
+
+    full_response = ""
+    tokens_generated = 0
+    final_metrics = {}
+    
+    for chunk in stream:
+        if tokens_generated < max_tokens: 
+            pbar.update(1)
+            tokens_generated += 1
+        
+        full_response += chunk.get('response', '')
+
+        if chunk.get('done'):
+            final_metrics = {
+                'total_duration': chunk.get('total_duration'), # total time in ns
+                'eval_count': chunk.get('eval_count'), # number of tokens generated
+                'eval_duration': chunk.get('eval_duration') # generation time in ns
+            }
+            pbar.n = tokens_generated
+            pbar.refresh()
+            break
+
+    pbar.close()
+    return (full_response, final_metrics)
+
+# TOKEN COUNTER
+def count_tokens(text, model="gpt-4"):
+    encoding = tiktoken.encoding_for_model(model)
+    token_estimate = encoding.encode(text)
+    return len(token_estimate)
 
 # EVENT EXTRACTOR BEGINS HERE
 SYSTEM_PROMPT = """
@@ -140,19 +184,29 @@ review, discuss, meeting, call, session, presentation
 """
 
 def event_extractor(raw_text):
+    # count tokens in raw text
+    token_estimate = count_tokens(raw_text)
+    if (token_estimate + 200) < 2000:
+        max_tokens = token_estimate + 200
+    else:
+        max_tokens = 2000
 
-    response = generate(model='llama3.2', 
+    stream = generate(model='llama3.2', 
                         prompt=raw_text, 
+                        stream=True,
                         system=SYSTEM_PROMPT,
                         format=CalendarData.model_json_schema(),
     options={
         'temperature': 0,
-        'num_predict': 2000, # hard stop at 2000 tokens
+        'num_predict': max_tokens, # hard stop at 2000 tokens
     })
 
-    print("Time taken to generate response: ", response.total_duration, "\n\n") # debugging
+    full_response, final_metrics = progressbar(stream, max_tokens, "Parsing")
+    
+    print("response: ", full_response, "\n")
+    print("Time taken to generate response: ", final_metrics, "\n\n") # debugging
 
-    calendar = CalendarData.model_validate_json(response.response)
+    calendar = CalendarData.model_validate_json(full_response)
     events = calendar.model_dump()
 
     deduped_events = dedupe_events(events['events'])
