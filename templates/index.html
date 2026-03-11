@@ -63,10 +63,15 @@ Home page
                 <div id = "bar" class="bar"></div>
             </div>
           
-        </div>
+        </div>    
+    </div>
 
 
-        {% with messages = get_flashed_messages() %}
+
+    <div id = "calendarLayout" style="display:none;">
+        <div class="uploadSection">
+            <h3>calendar tab test</h3>
+            {% with messages = get_flashed_messages() %}
             {% if messages %}
             <div class = "output">
                 <h3>Output:</h3>
@@ -75,13 +80,14 @@ Home page
                 <li class="list">{{ message }}</li>
                 {% endfor %}
                 <br>
-
                 </ul>
 
             {% endif %}
             {% endwith %}
 
     {% if filename and file_ready %}
+
+    <div id="calendarTrigger" style="display:none;"></div>
     <table border="1" cellpadding="5">
         <thead>
             <tr>
@@ -111,13 +117,7 @@ Home page
         {% endif %}
             </div>
     
-    </div>
-
-
-
-    <div id = "calendarLayout" style="display:none;">
-        <div class="uploadSection">
-            <h3>calendar tab test</h3>
+            
         </div>
     </div>
 
@@ -217,6 +217,14 @@ form.addEventListener("submit", function () {
         }, 400);
     });
 
+});
+
+window.addEventListener("load", function () {
+    const trigger = document.getElementById("calendarTrigger");
+
+    if (trigger) {
+        showLayout(calendarLayout, calendarTab);
+    }
 });
 </script>
 
