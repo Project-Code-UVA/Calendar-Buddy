@@ -69,9 +69,8 @@ Home page
 
 
     <div id = "calendarLayout" style="display:none;">
-        <div class="uploadSection">
-            <h3>calendar tab test</h3>
-            {% with messages = get_flashed_messages() %}
+        <div class="outputSection">
+        {% with messages = get_flashed_messages() %}
             {% if messages %}
             <div class = "output">
                 <h3>Output:</h3>
@@ -82,6 +81,10 @@ Home page
                 <br>
                 </ul>
 
+            {%else %}
+             <div class = "output"> <h3>No Current Events</h3></div>
+                
+            
             {% endif %}
             {% endwith %}
 
@@ -115,11 +118,25 @@ Home page
             </a>
 
         {% endif %}
+
+         <div class = "output">
+                <h3>Calendar</h3>
+                <div class = calendar>
+                    <h3>Month</h3>
+                    <h4>This calendar is not functional :/</h4>
+                
+                </div>
+                
+             </div>
+
             </div>
     
             
         </div>
     </div>
+
+
+
 
 
     <div id = "historyLayout" style="display:none;">

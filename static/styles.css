@@ -39,15 +39,6 @@ body{
     margin-bottom: 10px;
 }
 
-.output{
-    background-color:  #d6eae6;
-    padding: 30px 40px;
-    border-radius: 50px 50px 50px 50px; 
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 40px;
-}
 
 /*icons*/
 .button-icon{
@@ -300,4 +291,36 @@ button{
 
 .unclickTabButton:hover {
     background-color: white;
+}
+
+/* output */
+
+.outputSection{
+    display: flex;
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 50px 50px 50px 50px; 
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
+
+.output{
+    background-color:  #d6eae6;
+    padding: 30px 40px;
+    border-radius: 50px 50px 50px 50px; 
+    width: 50%;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 40px;
+}
+
+.calendar{
+    background-color: white;
+    height: 450px;
+    border-radius: 50px 50px 50px 50px; 
+    margin-top: 20px;
+    padding-top: 20px;
+    text-align: center;
 }
