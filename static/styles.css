@@ -318,9 +318,59 @@ button{
 
 .calendar{
     background-color: white;
-    height: 450px;
     border-radius: 50px 50px 50px 50px; 
     margin-top: 20px;
     padding-top: 20px;
+    padding-bottom:20px;
     text-align: center;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.calendar_inner{
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 2rem;
+}
+
+.calendar_headings{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.fa-solid.fa-arrow-left,
+.fa-solid.fa-arrow-right{
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.current_datetime{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.current_datetime .daytxt{
+    background-color: #ea8c6f;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+}
+
+.days_date ul{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    list-style: none;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.days_date .days .dates{
+   
 }
