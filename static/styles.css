@@ -147,12 +147,13 @@ button{
 .download {
     display: inline-block;
     padding: 10px 16px;
-    background-color: #4CAF50;
+    background-color: #dc7e62;
     color: white;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 50px;
     font-weight: bold;
     margin-bottom: 20px;
+    margin-top: 2rem;
 }
 .download:hover {
     background-color: #45a049;
@@ -314,6 +315,11 @@ button{
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 40px;
+}
+
+.outputTable{
+    border: 0cap;
+    border-collapse: collapse;
 }
 
 .calendar{

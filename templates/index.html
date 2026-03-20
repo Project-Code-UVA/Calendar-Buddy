@@ -73,43 +73,37 @@ Home page
         {% with messages = get_flashed_messages() %}
             {% if messages %}
             <div class = "output">
-                <h3>Output:</h3>
-                <ul>
-                {% for message in messages %}
-                <li class="list">{{ message }}</li>
-                {% endfor %}
-                <br>
-                </ul>
+                <h3>Events:</h3>
                  {% if filename and file_ready %}
 
-    <div id="calendarTrigger" style="display:none;"></div>
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Location</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in event_json %}
-            <tr>
-                <td>{{ event["name"] }}</td>
-                <td>{{ event["start"].strftime("%Y-%m-%d") }}</td>
-                <td>{{ event["start"].strftime("%H:%m") }} to {{ event["end"].strftime("%H:%m") }} </td>
-                <td>{{ event["loc"] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    <div id="calendarTrigger" style="display:none;"></div>
+                    <table border="1" cellpadding="5" class = "outputTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in event_json %}
+                            <tr>
+                                <td>{{ event["name"] }}</td>
+                                <td>{{ event["start"].strftime("%Y-%m-%d") }}</td>
+                                <td>{{ event["start"].strftime("%H:%m") }} to {{ event["end"].strftime("%H:%m") }} </td>
+                                <td>{{ event["loc"] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
 
-            <a href="{{url_for('download_file', filename=filename)}}"
-            class="download"> 
-            Download {{ filename }}
-            </a>
+                            <a href="{{url_for('download_file', filename=filename)}}"
+                            class="download"> 
+                            Download {{ filename }}
+                            </a>
 
-        {% endif %}
+                        {% endif %}
             </div>
                 
             {%else %}
