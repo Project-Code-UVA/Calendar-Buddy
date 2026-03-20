@@ -13,7 +13,7 @@
                 <img src="/static/images/calendaricon.png" class="calendar-icon">
                 <span class="name">CalendarBuddy</span>
             </div>
-        <a href="{{ url_for('home')}}" class="login-btn-top">
+        <a href="{{ url_for('home_page')}}" class="login-btn-top">
             <img src="/static/images/loginbtn.png" alt="" class="loginbtn-icon">
             Login
         </a>
@@ -23,43 +23,39 @@
         <div class="hero-content">
         <h1>Welcome to <br> Calendar Buddy!</h1>
         <p>Upload your posters here, and we will help you get organized.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-first">Upload</a>
+                <a href="#" class="btn btn-second">Access Calendar</a>
             </div>
+        </div>
     </section>
-
-{#    <div>#}
-{#        <h1>HOME</h1>#}
-{##}
-{#     <a class="loginButton" href="{{ url_for('home') }}#}
-{#       <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Back#}
-{#    </a>#}
-{#</div>#}
-{##}
-{#    <nav class="navbar"></nav>#}
-{#        <div class="logo">CalendarBuddy</div>#}
-{#       <a href="{{  url_for('home')}}" class="login-btn">#}
-{#           <img src="{{  url_for('static', filename='images/icon8-user-24.png')}}" alt="" class="button-icon">#}
-{#           Login#}
-{#       </a>#}
-{#    </nav>#}
-{##}
-{#    <section class="hero-section">#}
-{#        <div class="container">#}
-{#            <h1>Welcome to CalendarBuddy!</h1>#}
-{#            <p>Upload your event posters here and we will help you get organized.</p>#}
-{#            <div class="cta-buttons">#}
-{#                <a href="#" class="btn btn-primary">Upload</a>#}
-{#                <a href="#" class="btn btn-secondary">AccessToCalendar</a>#}
-{#            </div>#}
-{#        </div>#}
-{#    </section>#}
-{#    <section class="feature-section teal">#}
-{#        <div class="container">#}
-{#            <h2>Upload Your Event Files</h2>#}
-{#            <p>Simply drag and drop your event images or PDFs. CalendarBuddy automatically extracts event details like name, date, time, and location from your files.</p>#}
-{#        </div>#}
-{#    </section>#}
-{#    <footer class="footer">#}
-{#        © 2025 CalendarBuddy. Stay punctual, stay organized.#}
-{#    </footer>#}
-
+    <section class="feature-section feature-darkGreen">
+        <div class="feature-content">
+            <h2>Upload Your Event Files</h2>
+            <p>Simply drag and drop your event images or PDFs. CalendarBuddy
+            automatically extracts event details like name, date, time, and location
+            from your files.</p>
+        </div>
+    </section>
+    <section class="feature-section feature-orange">
+    <div class="feature-content">
+        <h2>View &amp; Organize Events</h2>
+        <p>
+            See all your events in a beautiful calendar view. Download .ics files to
+            import into Google Calendar, Apple Calendar, Outlook, or any calendar app you use.
+        </p>
+    </div>
+    </section>
+        <section class="feature-section feature-lightGreen">
+    <div class="feature-content">
+        <h2>Stay Organized</h2>
+        <p>
+            Keep track of your upload history, manage your events, and never miss an
+            important date again. CalendarBuddy keeps you punctual and prepared.
+        </p>
+    </div>
+    </section>
+    <footer class="footer">
+        © 2025 CalendarBuddy. Stay punctual, stay organized.
+    </footer>
 {% endblock body %}
