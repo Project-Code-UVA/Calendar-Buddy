@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #2d3748;
+}
+.home-container{
+    width: 100%;
+}
+.navbar{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 50px;
+    background: transparent;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+}
+.logo-group{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.calendar-icon{
+    width: 54px;
+    height:54px;
+    object-fit:contain;
+    display:block;
+}
+.name{
+    font-size: 32px;
+    font-weight: 700;
+    color:#2d3748;
+}
+.login-btn-top{
+    background-color: #0d7377;
+    color:white;
+    text-decoration: none;
+    padding: 16px 28px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size:18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.loginbtn-icon{
+    width: 20px;
+    height:20px;
+    vertical-align: middle;
+    margin-right:8px;
+    object-fit: contain;
+}
+.hero-section{
+    background-color: transparent;
+    min-height: 78vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px 80px;
+}
+.hero-content{
+    max-width: 1100px;
+}
+.hero-content h1{
+    font-size: 110px;
+    line-height: 1.05;
+    font-weight: 800;
+    color: #0d7377;
+    margin-bottom: 32px;
+}
+.hero-content p {
+    font-size: 30px;
+    color: #2d3748;
+    margin-bottom: 42px;
+}
