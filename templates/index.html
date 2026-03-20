@@ -80,15 +80,7 @@ Home page
                 {% endfor %}
                 <br>
                 </ul>
-
-            {%else %}
-             <div class = "output"> <h3>No Current Events</h3></div>
-                
-            
-            {% endif %}
-            {% endwith %}
-
-    {% if filename and file_ready %}
+                 {% if filename and file_ready %}
 
     <div id="calendarTrigger" style="display:none;"></div>
     <table border="1" cellpadding="5">
@@ -118,6 +110,16 @@ Home page
             </a>
 
         {% endif %}
+            </div>
+                
+            {%else %}
+             <div class = "output"> <h3>No Current Events</h3></div>
+                
+            
+            {% endif %}
+            {% endwith %}
+
+   
 
          <div class = "output">
                 <div class = "calendar">
@@ -146,37 +148,37 @@ Home page
                                 </ul>
 
                                 <ul class = "dates">
-                                    <li>1</li>
-                                    <li>2</li>
-                                    <li>3</li>
-                                    <li>4</li>
-                                    <li>5</li>
-                                    <li>6</li>
-                                    <li>7</li>
-                                    <li>8</li>
-                                    <li>9</li>
-                                    <li>10</li>
-                                    <li>11</li>
-                                    <li>12</li>
-                                    <li>13</li>
-                                    <li>14</li>
-                                    <li>15</li>
-                                    <li>16</li>
-                                    <li>17</li>
-                                    <li>18</li>
-                                    <li>19</li>
-                                    <li>20</li>
-                                    <li>21</li>
-                                    <li>22</li>
-                                    <li>23</li>
-                                    <li>24</li>
-                                    <li>25</li>
-                                    <li>26</li>
-                                    <li>27</li>
-                                    <li>28</li>
-                                    <li>29</li>
-                                    <li>30</li>
-                                    <li>31</li>
+                                    <li class = "notToday">1</li>
+                                    <li class = "notToday">2</li>
+                                    <li class = "notToday">3</li>
+                                    <li class = "notToday">4</li>
+                                    <li class = "notToday">5</li>
+                                    <li class = "notToday">6</li>
+                                    <li class = "notToday">7</li>
+                                    <li class = "notToday">8</li>
+                                    <li class = "notToday">9</li>
+                                    <li class = "notToday">10</li>
+                                    <li class = "notToday">11</li>
+                                    <li class = "notToday">12</li>
+                                    <li class = "notToday">13</li>
+                                    <li class = "notToday">14</li>
+                                    <li class = "notToday">15</li>
+                                    <li class = "notToday">16</li>
+                                    <li class = "notToday">17</li>
+                                    <li class = "notToday">18</li>
+                                    <li class = "notToday">19</li>
+                                    <li class = "today">20</li>
+                                    <li class = "notToday">21</li>
+                                    <li class = "notToday">22</li>
+                                    <li class = "notToday">23</li>
+                                    <li class = "notToday">24</li>
+                                    <li class = "notToday">25</li>
+                                    <li class = "notToday">26</li>
+                                    <li class = "notToday">27</li>
+                                    <li class = "notToday">28</li>
+                                    <li class = "notToday">29</li>
+                                    <li class = "notToday">30</li>
+                                    <li class = "notToday">31</li>
                                 </ul>
                             </div>
 
