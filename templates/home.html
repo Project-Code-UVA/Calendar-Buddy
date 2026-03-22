@@ -1,15 +1,61 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
-{% block title %}
-Home page
-{% endblock title %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{%  block title %}Home{% endblock title %}
 
 {% block body %}
-<div class="header">
-    <h1>HOME</h1>
-
-     <a class="loginButton" href="{{ url_for('home') }}">
-       <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Back
-    </a> 
-</div>
+    <div class="home-container">
+        <nav class="navbar">
+            <div class="logo-group">
+                <img src="/static/images/calendaricon.png" class="calendar-icon">
+                <span class="name">CalendarBuddy</span>
+            </div>
+        <a href="{{ url_for('home_page')}}" class="login-btn-top">
+            <img src="/static/images/loginbtn.png" alt="" class="loginbtn-icon">
+            Login
+        </a>
+        </nav>
+    </div>
+    <section class="hero-section">
+        <div class="hero-content">
+        <h1>Welcome to <br> Calendar Buddy!</h1>
+        <p>Upload your posters here, and we will help you get organized.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-first">Upload</a>
+                <a href="#" class="btn btn-second">Access Calendar</a>
+            </div>
+        </div>
+    </section>
+    <section class="feature-section feature-darkGreen">
+        <div class="feature-content">
+            <h2>Upload Your Event Files</h2>
+            <p>Simply drag and drop your event images or PDFs. CalendarBuddy
+            automatically extracts event details like name, date, time, and location
+            from your files.</p>
+        </div>
+    </section>
+    <section class="feature-section feature-orange">
+    <div class="feature-content">
+        <h2>View &amp; Organize Events</h2>
+        <p>
+            See all your events in a beautiful calendar view. Download .ics files to
+            import into Google Calendar, Apple Calendar, Outlook, or any calendar app you use.
+        </p>
+    </div>
+    </section>
+        <section class="feature-section feature-lightGreen">
+    <div class="feature-content">
+        <h2>Stay Organized</h2>
+        <p>
+            Keep track of your upload history, manage your events, and never miss an
+            important date again. CalendarBuddy keeps you punctual and prepared.
+        </p>
+    </div>
+    </section>
+    <footer class="footer">
+        © 2025 CalendarBuddy. Stay punctual, stay organized.
+    </footer>
 {% endblock body %}
