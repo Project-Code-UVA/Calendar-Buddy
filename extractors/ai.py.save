@@ -30,12 +30,12 @@ def dedupe_events(events):
     unique = []
 
     for e in events:
-        has_date = bool(e.get("date", "").strip()) # returns false if date is ""
         try:
-	        has_time = bool(e.get("time", "").strip())
-        except Exception as er:
-	        print(f"error: {er}")
-	        has_time = False
+		has_date = bool(e.get("date", "").strip()) # returns false if date is ""
+        	has_time = bool(e.get("time", "").strip())
+	except Error as e:
+		print(f"error: {e}")
+		has_date = False
         if has_date:
             if not has_time:
                 e['time'] = "12:00 AM"
