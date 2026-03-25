@@ -20,7 +20,7 @@ Home page
 {% if current_user.is_authenticated %}
     <p class="log">Hello, {{ current_user.name }}! <br>Email: {{ current_user.email }}</p>
     <a class="loginButton" href="/logout">
-        <img src="{{ current_user.profile_pic }}" alt="" class="button-icon">Logout
+        <img src="{{ current_user.profile_pic }}" alt="" class="button-icon" id = "outIcon">Logout
     </a>
 {% else %}
     <a class="loginButton" href="/login">
@@ -28,7 +28,7 @@ Home page
     </a>
 {% endif %}
  <a class="home" href="{{ url_for('home_page') }}">
-       <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Home
+       <img src="{{ url_for('static', filename='images/home.png') }}" alt="" class="hicon">Home
     </a> 
 
 </div>
@@ -115,7 +115,7 @@ Home page
 
    
 
-         <div class = "output">
+         <div class = "output" id = "calendarOutput">
                 <div class = "calendar">
                     <div class = "calendar_inner">
                         <div class = "calendar_controls">
@@ -124,6 +124,8 @@ Home page
                                 <h3 class = "month_year">MARCH 2026</h3>
                                 <i class = "fa-solid.fa-arrow-right"></i>
                             </div>
+
+                            <hr class="line">
                             
                             <div class = "current_datetime">
                                 <p class = "daytxt">Today</p>

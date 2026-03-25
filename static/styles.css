@@ -46,7 +46,15 @@ body{
     height: 30px;
     margin-right: 8px;
     vertical-align: middle;
-    border-radius: 50%
+    border-radius: 50%;
+}
+
+.hicon{
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    vertical-align: middle;
+   
 }
 
 .uploadIcon{
@@ -98,6 +106,7 @@ button{
     border-radius: 10px;
     border:none;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    cursor: pointer;
 }
 
 .loginButton{
@@ -110,7 +119,10 @@ button{
     top: 20px;
     right: 20px;
     z-index: 10;
+    width:12%;
+    text-align: center;
 }
+
 
 .loginButton:hover{
     background-color: #dc7e62;
@@ -172,6 +184,7 @@ button{
     background-color: white;
     padding: 8px 15px;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .file-label:hover{
@@ -193,7 +206,7 @@ button{
     border-radius: 10px;
     margin-top: 10px;
     margin-left: 90%;
-   
+   cursor: pointer;
 }
 
 .upload:hover {
@@ -251,7 +264,7 @@ button{
     margin-left: 40px;
     margin-right: 70px;
      border-radius: 100px;
-    padding-left: 1%;
+    padding-left: 0.5%;
     padding-top: 0.4%;
     padding-bottom:0.4%;
      position: relative;
@@ -269,10 +282,11 @@ button{
     border-radius: 100px;
     padding-top: 5px;
     padding-bottom: 5px;
-    margin-right: 20px;
-    width: 100px;
+    margin-right: 10px;
+    width: 120px;
     text-align: center;
     display: block;
+    
 }
 
 .unclickTabButton{
@@ -284,10 +298,11 @@ button{
     border-radius: 100px;
     padding-top: 5px;
     padding-bottom: 5px;
-    margin-right: 20px;
-    width: 100px;
+    margin-right: 10px;
+    width: 120px;
     text-align: center;
     display: block;
+    cursor: pointer;
 }
 
 .unclickTabButton:hover {
@@ -317,9 +332,19 @@ button{
     margin-bottom: 40px;
 }
 
+
 .outputTable{
-    border: 0cap;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    
+    background-color: white;
+    border-color: #0d7377;
     border-collapse: collapse;
+    
+}
+
+th, td {
+  padding: 10px;
 }
 
 .calendar{
@@ -347,11 +372,25 @@ button{
     padding: 1rem 0;
 }
 
-.fa-solid.fa-arrow-left,
-.fa-solid.fa-arrow-right{
+.month_year{
+    font-size: larger;
+}
+
+.fa-solid.fa-arrow-left{
     cursor: pointer;
     font-size: 1.2rem;
 }
+.fa-solid.fa-arrow-right{
+
+}
+
+.line {
+  border: none; 
+  border-top: 1px solid #ccc; 
+  height: 2px; 
+  background-color: transparent;
+}
+
 
 .current_datetime{
     display: flex;
@@ -364,6 +403,7 @@ button{
 
 .current_datetime .daytxt{
     background-color: #dc7e62;
+    color: white;
     border-radius: 5px;
     padding: 0.5rem 1rem;
 }
