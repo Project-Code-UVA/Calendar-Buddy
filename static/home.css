@@ -33,6 +33,7 @@ body{
     height:54px;
     object-fit:contain;
     display:block;
+    filter: drop-shadow(0 2px 6px rgba(13, 115, 119, 0.45));
 }
 .name{
     font-size: 32px;
@@ -52,11 +53,12 @@ body{
     gap: 10px;
 }
 .loginbtn-icon{
-    width: 30px;
+    width: 44px;
     height: auto;
     vertical-align: middle;
     margin-right:20px;
     object-fit: contain;
+    mix-blend-mode: screen;
 }
 .hero-section{
     background-color: transparent;
