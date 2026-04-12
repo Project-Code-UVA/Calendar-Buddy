@@ -332,6 +332,11 @@ button{
     margin-bottom: 40px;
 }
 
+#calendarOutput{
+    background-color: #ffa58f;
+    margin: 0px;
+    padding: 30px 30px;
+}
 
 .outputTable{
     margin-top: 20px;
@@ -350,8 +355,7 @@ th, td {
 .calendar{
     background-color: white;
     border-radius: 50px 50px 50px 50px; 
-    margin-top: 20px;
-    padding-top: 20px;
+    padding-top: 10px;
     padding-bottom:20px;
     text-align: center;
     align-items: center;
@@ -376,12 +380,15 @@ th, td {
     font-size: larger;
 }
 
-.fa-solid.fa-arrow-left{
+.arrow-left,
+.arrow-right {
     cursor: pointer;
     font-size: 1.2rem;
-}
-.fa-solid.fa-arrow-right{
-
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    margin-left:10px;
+    vertical-align: middle;
 }
 
 .line {
@@ -417,10 +424,20 @@ th, td {
     padding-top: 10px;
     padding-bottom: 10px;
     color:#0d7377;
+    font-weight: normal;
+}
+
+.days_date .days li {
+    border-bottom: 2px solid var(--weekdays-border-bottom-color);
+    margin: 0 0rem;
+    padding: 0px 0px;
+    font-weight: bold;
 }
 
 .today{
     background-color: #dc7e62;
+    padding-top: 15px;
+    padding-bottom: 15px;
     color: white;
     border-radius: 50px;
     margin-top: 10px;
@@ -430,8 +447,16 @@ th, td {
     background-color: #ea8c6f;
 }
 
-.notToday{
+.dummy{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 10px;
+    color:#64748b
+}
 
+.notToday{
+   padding-top: 15px;
+    padding-bottom: 15px;
     margin-top: 10px;
     color: black;
 }
