@@ -103,7 +103,7 @@ body{
     box-shadow: 0 16px 28px rgba(0, 0, 0, 0.12);
 }
 .btn-first{
-    background-color: #0d7377;
+    background-color: #ea8c6f;
     color: white;
 }
 .btn-second{
@@ -157,4 +157,8 @@ body{
     text-align: center;
     padding: 26px 20px;
     font-size: 13px;
+}
+
+#org{
+    color:white;
 }

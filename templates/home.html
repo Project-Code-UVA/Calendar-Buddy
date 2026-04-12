@@ -13,10 +13,19 @@
                 <img src="/static/images/calendar.png" class="calendar-icon">
                 <span class="name">CalendarBuddy</span>
             </div>
-        <a href="{{ url_for('login')}}" class="login-btn-top">
-            <img src="/static/images/loginbtn.png" alt="" class="loginbtn-icon">
-            Login
-        </a>
+          
+        {% if current_user.is_authenticated %}
+            <a class="login-btn-top" href="/logout">
+                <img src="{{ current_user.profile_pic }}" alt="" class="button-icon">Logout
+            </a>
+        {% else %}
+            <a href="{{ url_for('login')}}" class="login-btn-top">
+              <img src="/static/images/loginbtn.png" alt="" class="loginbtn-icon">
+              Login
+            </a>
+        {% endif %}
+
+
         </nav>
     </div>
     <section class="hero-section">
@@ -25,7 +34,6 @@
         <p>Upload your posters here, and we will help you get organized.</p>
             <div class="cta-buttons">
                 <a href="{{ url_for('index') }}" class="btn btn-first">Upload</a>
-                <a href="{{ url_for('index') }}" class="btn btn-second">Access Calendar</a>
             </div>
         </div>
     </section>
@@ -39,7 +47,7 @@
     </section>
     <section class="feature-section feature-orange">
     <div class="feature-content">
-        <h2>View &amp; Organize Events</h2>
+        <h2 id ="org">View &amp; Organize Events</h2>
         <p>
             See all your events in a beautiful calendar view. Download .ics files to
             import into Google Calendar, Apple Calendar, Outlook, or any calendar app you use.
