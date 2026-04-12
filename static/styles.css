@@ -266,3 +266,37 @@ button{
 .unclickTabButton:hover {
     background-color: white;
 }
+
+#historyTitle{
+    padding-bottom: 20px;
+}
+
+#historySection{
+    height: 400px;
+}
+
+.historyTable{
+    margin-top: 5px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-color: #0d7377;
+    border-collapse: collapse;
+    
+}
+
+.historyTable th,
+.historyTable td {
+    border: 1px solid #0d7377;
+    padding: 16px 40px ;
+    text-align: left;
+}
+
+.historyTable th {
+    background-color: #d6eae6;
+    color: #2d3748;
+}
+
+#downloadLink{
+    color: #dc7e62;
+    text-decoration: underline;
+}
