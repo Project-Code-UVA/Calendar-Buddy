@@ -228,7 +228,7 @@ button{
     padding-top: 0.4%;
     padding-bottom:0.4%;
      position: relative;
-     max-width: 45%;
+     max-width: 25%;
      list-style-type: none;
      display:flex;
 }

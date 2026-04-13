@@ -29,7 +29,7 @@ Home page
 
 <div class = "tab"> 
          <div class = "tabButton" id="uploadTab">Upload</div>
-        <div class = "unclickTabButton" id="calendarTab"> Calendar</div>
+        <!--<div class = "unclickTabButton" id="calendarTab"> Calendar</div>-->
         <div class = "unclickTabButton" id="historyTab">History</div>
 </div>
 
@@ -100,7 +100,7 @@ Home page
     
     </div>
 
-
+<!-- probably won't use the calendar tab...
 
     <div id = "calendarLayout" style="display:none;">
         <div class="uploadSection">
@@ -108,7 +108,7 @@ Home page
         </div>
     </div>
 
-
+-->
     <div id = "historyLayout" style="display:none;">
         <div class="uploadSection" id = "historySection">
             <h3 id="historyTitle">View your past uploads: </h3>
@@ -157,17 +157,16 @@ document.getElementById("file").addEventListener("change", function() {
 
 // tab bar
 const uploadTab = document.getElementById("uploadTab");
-const calendarTab = document.getElementById("calendarTab");
 const historyTab = document.getElementById("historyTab");
 
 const uploadLayout = document.getElementById("uploadLayout");
 const historyLayout = document.getElementById("historyLayout");
-const calendarLayout = document.getElementById("calendarLayout");
+
 
 function showLayout (layout, activeTab){
     uploadLayout.style.display = "none";
     historyLayout.style.display = "none";
-    calendarLayout.style.display = "none";
+
     
     layout.style.display = "block";
 
@@ -177,8 +176,7 @@ function showLayout (layout, activeTab){
     historyTab.classList.remove("tabButton");
     historyTab.classList.add("unclickTabButton");
 
-    calendarTab.classList.remove("tabButton");
-    calendarTab.classList.add("unclickTabButton");
+   
 
     activeTab.classList.remove("unclickTabButton");
     activeTab.classList.add("tabButton");
@@ -188,9 +186,7 @@ function showLayout (layout, activeTab){
 uploadTab.addEventListener("click",()=>{
     showLayout(uploadLayout, uploadTab);
 });
-calendarTab.addEventListener("click",()=>{
-    showLayout(calendarLayout, calendarTab);
-});
+
 historyTab.addEventListener("click",()=>{
     showLayout(historyLayout,historyTab);
 });
