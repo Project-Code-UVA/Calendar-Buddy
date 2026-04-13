@@ -64,17 +64,17 @@ from database.db import init_app, get_db
 
 from ics_logic.generate_ics_file import generate_ics, ics_to_file
 
+app = Flask(__name__)
 # google login configuration
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "52505839374-j5o94mbmga0p284hqkm9p0a1kuuahjbq.apps.googleusercontent.com")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "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")
 GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
 
 UPLOAD_FOLDER = 'uploads/'
-DOWNLOAD_FOLDER = 'downloads/'
+DOWNLOAD_FOLDER =  'downloads/'
 ALLOWED_EXTENSIONS = {'pdf', 'txt', 'png', 'jpg', 'jpeg'}
 
 # flask app setup
-app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max file size
@@ -279,8 +279,9 @@ def file_to_db(user_id, filename, old_name, file_path):
     except sqlite3.Error as e:
         flash(f"database error: {e}", "error")
 
-@app.route('/download/<path:filename>', methods=['GET', 'POST'])
+@app.route('/downloads/<path:filename>', methods=['GET'])
 def download_file(filename):
+    print("running download file...") 
     # logged in user -> file exists on disk
     if current_user.is_authenticated:
         downloads = os.path.join(app.root_path, app.config['DOWNLOAD_FOLDER'])
