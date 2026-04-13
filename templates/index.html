@@ -125,7 +125,7 @@ Home page
                             {% for file in user_files %}
                             <tr>
                                 <td>{{ file }}</td>
-                                <td id = "downloadLink"> download link </td>
+                                <td id = "downloadLink"><a href="{{ url_for('download_file', filename=file)}}" class="download"> Download {{ file }}</a> </td>
                             </tr>
                             {% endfor %}
                         </tbody>
