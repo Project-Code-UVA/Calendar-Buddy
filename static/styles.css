@@ -116,10 +116,9 @@ button{
     background-color: #ea8c6f;
     color: white;
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 10%;
+    right: 1%;
     z-index: 10;
-    width:12%;
     text-align: center;
 }
 
@@ -135,8 +134,8 @@ button{
     background-color: #ea8c6f;
     color: white;
     position: absolute;
-    top: 20px;
-    right: 210px;
+    top: 10%;
+    right: 10%;
     z-index: 10;
 }
 
@@ -159,7 +158,7 @@ button{
 .download {
     display: inline-block;
     padding: 10px 16px;
-    background-color: #dc7e62;
+    background-color: #ea8c6f; 
     color: white;
     text-decoration: none;
     border-radius: 50px;
@@ -168,7 +167,7 @@ button{
     margin-top: 2rem;
 }
 .download:hover {
-    background-color: #45a049;
+    background-color: #dc7e62;
 }
 
 .file{
@@ -322,6 +321,17 @@ button{
     margin-bottom: 40px;
 }
 
+#tableSection{
+    padding-left: 20px;
+}
+
+.placeholder{
+    display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin-right:5%;
+}
+
 .output{
     background-color:  #d6eae6;
     padding: 30px 40px;
@@ -330,6 +340,20 @@ button{
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 40px;
+}
+
+.output2{
+    background-color:  #d6eae6;
+    padding: 30px 40px;
+    border-radius: 50px 50px 50px 50px; 
+    width: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 40px;
+    height: 50%;
+}
+#filteredEvents{
+    margin-top: 20px;
 }
 
 #calendarOutput{
@@ -356,7 +380,7 @@ th, td {
     background-color: white;
     border-radius: 50px 50px 50px 50px; 
     padding-top: 10px;
-    padding-bottom:20px;
+    padding-bottom:5px;
     text-align: center;
     align-items: center;
     justify-content: center;
