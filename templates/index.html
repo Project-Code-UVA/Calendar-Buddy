@@ -133,16 +133,16 @@ Home page
                     <div class = "calendar_inner">
                         <div class = "calendar_controls">
                             <div class = "calendar_headings">
-                                 <i class = "fa-solid fa-arrow-left"><img src="{{ url_for('static', filename='images/arrowL.png') }}" alt="" class ="arrow-left"></i>
+                                 <i class = "fa-solid fa-arrow-left" id = "prev"><img src="{{ url_for('static', filename='images/arrowL.png') }}" alt="" class ="arrow-left"></i>
                                 
                                 <h3 class = "month_year">MARCH 2026</h3>
-                                 <i class = "fa-solid fa-arrow-right"><img src="{{ url_for('static', filename='images/arrowR.png') }}" alt="" class ="arrow-right"></i>
+                                 <i class = "fa-solid fa-arrow-right" id = "next"><img src="{{ url_for('static', filename='images/arrowR.png') }}" alt="" class ="arrow-right"></i>
                             </div>
 
                             <hr class="line">
                             
                             <div class = "current_datetime">
-                                <p class = "daytxt">Today</p>
+                                <i class = "daytxt" id = "todayBtn">Today</i>
                                 <p class ="datetxt">Mon, 16, Mar 2026</p>
                             </div>
 
@@ -158,38 +158,8 @@ Home page
                                 </ul>
 
                                 <ul class = "dates">
-                                    <li class = "notToday">1</li>
-                                    <li class = "notToday">2</li>
-                                    <li class = "notToday">3</li>
-                                    <li class = "notToday">4</li>
-                                    <li class = "notToday">5</li>
-                                    <li class = "notToday">6</li>
-                                    <li class = "notToday">7</li>
-                                    <li class = "notToday">8</li>
-                                    <li class = "notToday">9</li>
-                                    <li class = "notToday">10</li>
-                                    <li class = "notToday">11</li>
-                                    <li class = "notToday">12</li>
-                                    <li class = "notToday">13</li>
-                                    <li class = "notToday">14</li>
-                                    <li class = "notToday">15</li>
-                                    <li class = "notToday">16</li>
-                                    <li class = "notToday">17</li>
-                                    <li class = "notToday">18</li>
-                                    <li class = "notToday">19</li>
-                                    <li class = "today">20</li>
-                                    <li class = "notToday">21</li>
-                                    <li class = "notToday">22</li>
-                                    <li class = "notToday">23</li>
-                                    <li class = "notToday">24</li>
-                                    <li class = "notToday">25</li>
-                                    <li class = "notToday">26</li>
-                                    <li class = "notToday">27</li>
-                                    <li class = "notToday">28</li>
-                                    <li class = "notToday">29</li>
-                                    <li class = "notToday">30</li>
-                                    <li class = "notToday">31</li>
                                 </ul>
+                                
                             </div>
 
                         </div>

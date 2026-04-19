@@ -402,6 +402,7 @@ th, td {
 
 .month_year{
     font-size: larger;
+    text-transform: uppercase;
 }
 
 .arrow-left,
@@ -439,6 +440,10 @@ th, td {
     padding: 0.5rem 1rem;
 }
 
+.daytxt:hover{
+    cursor: pointer;
+}
+
 .days_date ul{
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -459,7 +464,7 @@ th, td {
 }
 
 .today{
-    background-color: #dc7e62;
+    background-color:#0d7377;
     padding-top: 15px;
     padding-bottom: 15px;
     color: white;
@@ -468,14 +473,21 @@ th, td {
 }
 
 .today:hover{
-    background-color: #ea8c6f;
+    background-color: #095c5f;
 }
 
 .dummy{
     padding-top: 15px;
     padding-bottom: 15px;
     margin-top: 10px;
-    color:#64748b
+    color:#64748b;
+     border-radius: 50px;
+}
+
+.dummy:hover{
+    background-color: #d6eae6;
+    
+    
 }
 
 .notToday{
@@ -483,6 +495,7 @@ th, td {
     padding-bottom: 15px;
     margin-top: 10px;
     color: black;
+     border-radius: 50px;
 }
 
 .notToday:hover{
