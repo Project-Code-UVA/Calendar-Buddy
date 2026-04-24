@@ -1,11 +1,17 @@
 {% extends "base.html" %} 
 <!-- Following the base.html layout -->
 
+<!-- current issue w progress bar:
+        animation currently does not reflect actual loading time
+ -->
+
 {% block title %}
 Home page
 {% endblock title %}
 
 {% block body %}
+
+
 <div class="header">
     <h1>Welcome to CalendarBuddy!</h1>
     <h2>Upload event files, extract details automatically, and manage your calendar!</h2>
@@ -14,15 +20,15 @@ Home page
 {% if current_user.is_authenticated %}
     <p class="log">Hello, {{ current_user.name }}! <br>Email: {{ current_user.email }}</p>
     <a class="loginButton" href="/logout">
-        <img src="{{ current_user.profile_pic }}" alt="" class="button-icon">Logout
+        <img src="{{ current_user.profile_pic }}" alt="" class="button-icon" id = "outIcon">Logout
     </a>
 {% else %}
     <a class="loginButton" href="/login">
-        <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Google Login 
+        <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Login 
     </a>
 {% endif %}
  <a class="home" href="{{ url_for('home_page') }}">
-       <img src="{{ url_for('static', filename='images/icons8-user-24.png') }}" alt="" class="button-icon">Home
+       <img src="{{ url_for('static', filename='images/home.png') }}" alt="" class="hicon">Home
     </a> 
 
 </div>
@@ -33,6 +39,8 @@ Home page
         <div class = "unclickTabButton" id="historyTab">History</div>
 </div>
 
+
+
 <section id = "body">
     <div id ="uploadLayout">
 
@@ -42,14 +50,13 @@ Home page
         <div class="buttonSection">
             <img src="{{ url_for('static', filename='images/icons8-upload-48.png') }}" alt="" class="uploadIcon">
 
-            <form method="post" enctype="multipart/form-data">
+            <form id="uploadForm" method="post" enctype="multipart/form-data">
                 <input id="file" type="file" class="file" name="file" accept=".pdf, .txt, .png, .jpg, .jpeg">
                 <label for="file" class="file-label">Select File</label>
                 <div id="file-name" class="file-name">No file selected</div>
                 <br>
-                <input type="submit" class= "upload" value="Upload">
+                <input type="submit" class= "upload" value="Upload" id = "uploadBtn">
             </form>
-        </div>
         </div>
 
 
@@ -98,20 +105,201 @@ Home page
    {% endif %}
     </div>
     
+            <div class="progressBar">
+                <div id = "bar" class="bar"></div>
+            </div>
+          
+        </div>    
+
     </div>
 
 
 
     <div id = "calendarLayout" style="display:none;">
-        <div class="uploadSection">
-            <h3>calendar tab test</h3>
+        
+        <div class="outputSection" id ="tableSection">
+            <div class="placeholder">
+    {% with messages = get_flashed_messages() %}
+        {% if messages and filename and file_ready %}
+
+            <div class="output2">
+                <h3 id = "eventsTitle">Uploaded Events:</h3>
+
+                <div id="calendarTrigger" style="display:none;"></div>
+
+                <table border="1" cellpadding="5" class="outputTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in event_json %}
+                        <tr>
+                            <td>{{ event["name"] }}</td>
+                            <td>{{ event["start"].strftime("%Y-%m-%d") }}</td>
+                            <td>
+                                {{ event["start"].strftime("%H:%M") }}
+                                to
+                                {{ event["end"].strftime("%H:%M") }}
+                            </td>
+                            <td>{{ event["loc"] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <a href="{{ url_for('download_file', filename=filename) }}"
+                   class="download">
+                    Download {{ filename }}
+                </a>
+            </div>
+
+        {% else %}
+            <div class="output2">
+                <h3 id = "eventsTitle">No Files Uploaded Yet!</h3>
+            </div>
+
+           
+        {% endif %}
+    {% endwith %}
+
+    <!--Filtered date!-->
+
+            {% with messages = get_flashed_messages() %}
+        {% if messages and filename and file_ready %}
+
+            <div class="output2" id="filteredEvents">
+                <h3 id="filteredDate">No Events Today</h3>
+                <hr class="line2">
+                <div id="noEventsMsg" style="display:none;" class = "noEvents">No events!</div>
+                <div id ="tableInterior">
+                <div id="calendarTrigger" style="display:none;"></div>
+
+                <table border="1" cellpadding="5" class="outputTable" id = "filteredTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in event_json %}
+                        <tr data-date="{{ event['start'].strftime('%Y-%m-%d') }}">
+                            <td>{{ event["name"] }}</td>
+                            <td>{{ event["start"].strftime("%Y-%m-%d") }}</td>
+                            <td>
+                                {{ event["start"].strftime("%H:%M") }}
+                                to
+                                {{ event["end"].strftime("%H:%M") }}
+                            </td>
+                            <td>{{ event["loc"] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+
+            </div>
+
+        {% else %}
+             <div class="output2" id="filteredEvents">
+                <h3 id="filteredDate">No Events Today</h3>
+                <hr class="line2">
+                <div id="noEventsMsg" style="display:none;" class = "noEvents">No events!</div>
+                
+            </div>
+
+           
+        {% endif %}
+    {% endwith %}
+
+</div>
+   
+
+         <div class = "output" id = "calendarOutput">
+                <div class = "calendar">
+                    <div class = "calendar_inner">
+                        <div class = "calendar_controls">
+                            <div class = "calendar_headings">
+                                 <i class = "fa-solid fa-arrow-left" id = "prev"><img src="{{ url_for('static', filename='images/arrowL.png') }}" alt="" class ="arrow-left"></i>
+                                
+                                <h3 class = "month_year">MARCH 2026</h3>
+                                 <i class = "fa-solid fa-arrow-right" id = "next"><img src="{{ url_for('static', filename='images/arrowR.png') }}" alt="" class ="arrow-right"></i>
+                            </div>
+
+                            <hr class="line">
+                            
+                            <div class = "current_datetime">
+                                <i class = "daytxt" id = "todayBtn">Today</i>
+                                <p class ="datetxt">Mon, 16, Mar 2026</p>
+                            </div>
+
+                            <div class = "days_date">
+                                <ul class = "days">
+                                    <li>Sun</li>
+                                    <li>Mon</li>
+                                    <li>Tue</li>
+                                    <li>Wed</li>
+                                    <li>Thu</li>
+                                    <li>Fri</li>
+                                    <li>Sat</li>
+                                </ul>
+
+                                <ul class = "dates">
+                                </ul>
+                                
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                
+             </div>
+
+            </div>
+    
+            
         </div>
     </div>
 
 
+
+
+
     <div id = "historyLayout" style="display:none;">
-        <div class="uploadSection">
-            <h3>history tab test</h3>
+        <div class="uploadSection" id = "historySection">
+            <h3 id="historyTitle">View your past uploads: </h3>
+
+            {% if user_files %}
+                    <table border="1" cellpadding="5" class="historyTable">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Download ICS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in user_files %}
+                            <tr>
+                                <td>{{ file }}</td>
+                                <td id = "downloadLink"><a href="{{ url_for('download_file', filename=file)}}" class="download"> Download {{ file }}</a> </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                    {% if current_user.is_authenticated %}
+                        <p>You have no files uploaded.</p>
+                    {% else %}
+                        <p>Guest accounts have no history saved</p>
+                    {% endif %}
+            {% endif %}
         </div>
 
         {% if user_files %}
@@ -197,7 +385,51 @@ historyTab.addEventListener("click",()=>{
     showLayout(historyLayout,historyTab);
 });
 
+//progress bar
+const form = document.getElementById("uploadForm");
+
+form.addEventListener("submit", function () {
+    const bar = document.getElementById("bar");
+
+    //slow animation
+    bar.style.transition = "";
+    bar.style.width = "0%";
+    bar.classList.remove("playSlow");
+    void bar.offsetWidth;
+    bar.classList.add("playSlow");
+
+    //fast animation
+    const formData = new FormData(form);
+    fetch (window.location.href,{
+        method:"POST",
+        body:formData
+    })
+
+    .then (res => res.text())
+    .then (html => {
+        bar.classList.remove("playSlow");
+         bar.style.width = "90%";
+        void bar.offsetWidth;
+        bar.classList.add("playFast");
+
+        setTimeout (()=> {
+            document.open();
+            document.write(html);
+            document.close();
+        }, 400);
+    });
+
+});
+
+window.addEventListener("load", function () {
+    const trigger = document.getElementById("calendarTrigger");
+
+    if (trigger) {
+        showLayout(calendarLayout, calendarTab);
+    }
+});
 </script>
 
-
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock body %}
+

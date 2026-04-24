@@ -39,15 +39,6 @@ body{
     margin-bottom: 10px;
 }
 
-.output{
-    background-color:  #d6eae6;
-    padding: 30px 40px;
-    border-radius: 50px 50px 50px 50px; 
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 40px;
-}
 
 /*icons*/
 .button-icon{
@@ -55,7 +46,15 @@ body{
     height: 30px;
     margin-right: 8px;
     vertical-align: middle;
-    border-radius: 50%
+    border-radius: 50%;
+}
+
+.hicon{
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    vertical-align: middle;
+   
 }
 
 .uploadIcon{
@@ -84,7 +83,7 @@ h2{
 }
 
 h3{ 
-    font-size: 16;
+    font-size: 16px;
     font-weight: 500;
     line-height: 1;
     color: #2d3748;
@@ -107,6 +106,7 @@ button{
     border-radius: 10px;
     border:none;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    cursor: pointer;
 }
 
 .loginButton{
@@ -116,10 +116,13 @@ button{
     background-color: #ea8c6f;
     color: white;
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 10%;
+    right: 1%;
     z-index: 10;
+    text-align: center;
+    margin-left:5px;
 }
+
 
 .loginButton:hover{
     background-color: #dc7e62;
@@ -132,8 +135,8 @@ button{
     background-color: #ea8c6f;
     color: white;
     position: absolute;
-    top: 20px;
-    right: 210px;
+    top: 10%;
+    right: 10%;
     z-index: 10;
 }
 
@@ -156,15 +159,16 @@ button{
 .download {
     display: inline-block;
     padding: 10px 16px;
-    background-color: #4CAF50;
+    background-color: #ea8c6f; 
     color: white;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 50px;
     font-weight: bold;
     margin-bottom: 20px;
+    margin-top: 2rem;
 }
 .download:hover {
-    background-color: #45a049;
+    background-color: #dc7e62;
 }
 
 .file{
@@ -180,6 +184,7 @@ button{
     background-color: white;
     padding: 8px 15px;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .file-label:hover{
@@ -201,12 +206,13 @@ button{
     border-radius: 10px;
     margin-top: 10px;
     margin-left: 90%;
-   
+   cursor: pointer;
 }
 
 .upload:hover {
     background-color: rgb(227, 227, 227);
 }
+
 
 .list{
     color: #64748b;
@@ -215,6 +221,40 @@ button{
     margin-left: 40px;
 }
 
+/* progress bar */
+.progressBar{
+    margin-top: 20px;
+    position: relative;
+    background-color:#d6eae6 ;
+    border-radius: 10px;
+    height: 20px;
+} 
+
+
+.bar{
+    height: 20px;
+    background-color: #0d7377;
+    border-radius: 10px;
+    width: 0%;
+}
+
+.playSlow{
+   animation: slowAnimation 80s forwards; 
+}
+
+.playFast{
+   animation: progressAnimation 0.4s ease; 
+}
+
+@keyframes slowAnimation {
+    from {width: 0%;}
+    to {width: 95%;}
+}
+
+@keyframes fastAnimation {
+    from {width: 95%;}
+    to {width: 100%;}
+}
 
 /* tab stuff */
 .tab{
@@ -224,7 +264,7 @@ button{
     margin-left: 40px;
     margin-right: 70px;
      border-radius: 100px;
-    padding-left: 1%;
+    padding-left: 0.5%;
     padding-top: 0.4%;
     padding-bottom:0.4%;
      position: relative;
@@ -242,10 +282,11 @@ button{
     border-radius: 100px;
     padding-top: 5px;
     padding-bottom: 5px;
-    margin-right: 20px;
-    width: 100px;
+    margin-right: 10px;
+    width: 120px;
     text-align: center;
     display: block;
+    
 }
 
 .unclickTabButton{
@@ -257,12 +298,242 @@ button{
     border-radius: 100px;
     padding-top: 5px;
     padding-bottom: 5px;
-    margin-right: 20px;
-    width: 100px;
+    margin-right: 10px;
+    width: 120px;
     text-align: center;
     display: block;
+    cursor: pointer;
 }
 
 .unclickTabButton:hover {
     background-color: white;
+}
+
+/* output */
+
+.outputSection{
+    display: flex;
+    align-items: stretch;
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 50px 50px 50px 50px; 
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
+
+#tableSection{
+    padding-left: 20px;
+}
+
+.placeholder{
+    display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin-right:5%;
+}
+
+.output{
+    background-color:  #d6eae6;
+    padding: 30px 40px;
+    border-radius: 50px 50px 50px 50px; 
+    width: 50%;
+    margin-left: 20px;
+    margin-right: 20px;
+   
+}
+
+.output2{
+    background-color:  #d6eae6;
+    padding: 30px 40px;
+    border-radius: 50px 50px 50px 50px; 
+    width: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 40px;
+    min-height: 280px;
+}
+#filteredEvents{
+    margin-top: 20px;
+    background-color:#ffb9a7;
+
+}
+
+#eventsTitle{
+    font-size: larger;
+}
+
+#filteredDate{
+    color:black;
+    font-size: larger;
+
+}
+
+#noEventsMsg{
+    color:black;
+}
+
+#calendarOutput{
+    background-color:#ffa58f;
+    margin: 0px;
+    padding: 30px 30px;
+}
+
+.outputTable{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    
+    background-color: white;
+    border-color: #0d7377;
+    border-collapse: collapse;
+    
+}
+
+th, td {
+  padding: 10px;
+}
+
+.calendar{
+    background-color: white;
+    border-radius: 50px 50px 50px 50px; 
+    padding-top: 10px;
+    padding-bottom:5px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.calendar_inner{
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 2rem;
+}
+
+.calendar_headings{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.month_year{
+    font-size: larger;
+    text-transform: uppercase;
+    color:#ea8c6f;
+    font-weight: bold;
+}
+
+.arrow-left,
+.arrow-right {
+    cursor: pointer;
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    margin-left:10px;
+    vertical-align: middle;
+}
+
+.line {
+  border: none; 
+  border-top: 1px solid #ccc; 
+  height: 2px; 
+  background-color: transparent;
+}
+
+.line2{
+        border: none; 
+    border-top: 1px solid black; 
+    height: 3px; 
+    background-color: transparent;
+    margin-top:10px;
+}
+
+
+.current_datetime{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.current_datetime .daytxt{
+    background-color: #dc7e62;
+    color: white;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+}
+
+.daytxt:hover{
+    cursor: pointer;
+}
+
+.days_date ul{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    list-style: none;
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color:#0d7377;
+    font-weight: normal;
+}
+
+.days_date .days li {
+    border-bottom: 2px solid var(--weekdays-border-bottom-color);
+    margin: 0 0rem;
+    padding: 0px 0px;
+    font-weight: bold;
+}
+
+.today{
+    background-color:#0d7377;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: white;
+    border-radius: 50px;
+    margin-top: 10px;
+}
+
+.today:hover{
+    background-color: #095c5f;
+    cursor: pointer;
+}
+
+.dummy{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 10px;
+    color:#64748b;
+     border-radius: 50px;
+}
+
+.dummy:hover{
+    background-color: #d6eae6;
+    cursor: pointer;
+    
+}
+
+.notToday{
+   padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 10px;
+    color: black;
+     border-radius: 50px;
+}
+
+.notToday:hover{
+    background-color: #d6eae6;
+    border-radius: 50px;
+  cursor: pointer;
+}
+
+.noEvents{
+    padding-top: 20px;
+
 }
