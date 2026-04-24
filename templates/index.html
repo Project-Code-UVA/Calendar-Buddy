@@ -226,36 +226,33 @@ Home page
 
 
     <div id = "historyLayout" style="display:none;">
-        <div class="uploadSection">
-            <h3>history tab test</h3>
+        <div class="uploadSection" id = "historySection">
+            <h3 id="historyTitle">View your past uploads: </h3>
 
             {% if user_files %}
-            <p> user_files = {{ user_files }}</p>
-            <p> user_files length: {{ user_files|length }} </p>
-                <table border="1" cellpadding="5">
-                    <thead>
-                        <tr>
-                            <th>File Name</th>
-                            <th>Download ICS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for file in user_files %}
-                        <tr>
-                            <td>{{ file }}</td>
-                            <td> download link </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-        {% else %}
-                {% if current_user.is_authenticated %}
-                    <p>You have no files uploaded.</p>
-                {% else %}
-                    <p>Guest accounts have no history saved</p>
-                {% endif %}
-        {% endif %}
-    </div>
+                    <table border="1" cellpadding="5" class="historyTable">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Download ICS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in user_files %}
+                            <tr>
+                                <td>{{ file }}</td>
+                                <td id = "downloadLink"><a href="{{ url_for('download_file', filename=file)}}" class="download"> Download {{ file }}</a> </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                    {% if current_user.is_authenticated %}
+                        <p>You have no files uploaded.</p>
+                    {% else %}
+                        <p>Guest accounts have no history saved</p>
+                    {% endif %}
+            {% endif %}
         </div>
     </div>
 
