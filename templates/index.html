@@ -76,7 +76,7 @@ Home page
         {% if messages and filename and file_ready %}
 
             <div class="output2">
-                <h3>Events:</h3>
+                <h3 id = "eventsTitle">Uploaded Events:</h3>
 
                 <div id="calendarTrigger" style="display:none;"></div>
 
@@ -111,20 +111,67 @@ Home page
                 </a>
             </div>
 
+        {% else %}
+            <div class="output2">
+                <h3 id = "eventsTitle">No Files Uploaded Yet!</h3>
+            </div>
+
+           
+        {% endif %}
+    {% endwith %}
+
+    <!--Filtered date!-->
+
+            {% with messages = get_flashed_messages() %}
+        {% if messages and filename and file_ready %}
+
             <div class="output2" id="filteredEvents">
-                <h3>No Events Today</h3>
+                <h3 id="filteredDate">No Events Today</h3>
+                <hr class="line2">
+                <div id="noEventsMsg" style="display:none;" class = "noEvents">No events!</div>
+                <div id ="tableInterior">
+                <div id="calendarTrigger" style="display:none;"></div>
+
+                <table border="1" cellpadding="5" class="outputTable" id = "filteredTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in event_json %}
+                        <tr data-date="{{ event['start'].strftime('%Y-%m-%d') }}">
+                            <td>{{ event["name"] }}</td>
+                            <td>{{ event["start"].strftime("%Y-%m-%d") }}</td>
+                            <td>
+                                {{ event["start"].strftime("%H:%M") }}
+                                to
+                                {{ event["end"].strftime("%H:%M") }}
+                            </td>
+                            <td>{{ event["loc"] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+
             </div>
 
         {% else %}
-            <div class="output2">
-                <h3>No Events Uploaded</h3>
+             <div class="output2" id="filteredEvents">
+                <h3 id="filteredDate">No Events Today</h3>
+                <hr class="line2">
+                <div id="noEventsMsg" style="display:none;" class = "noEvents">No events!</div>
+                
             </div>
 
-            <div class="output2" id="filteredEvents">
-                <h3>No Events Today</h3>
-            </div>
+           
         {% endif %}
     {% endwith %}
+
 </div>
    
 

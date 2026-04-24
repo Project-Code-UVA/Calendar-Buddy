@@ -312,6 +312,7 @@ button{
 
 .outputSection{
     display: flex;
+    align-items: stretch;
     background-color: white;
     padding: 30px 40px;
     border-radius: 50px 50px 50px 50px; 
@@ -339,7 +340,7 @@ button{
     width: 50%;
     margin-left: 20px;
     margin-right: 20px;
-    margin-bottom: 40px;
+   
 }
 
 .output2{
@@ -350,14 +351,30 @@ button{
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 40px;
-    height: 50%;
+    min-height: 280px;
 }
 #filteredEvents{
     margin-top: 20px;
+    background-color:#ffb9a7;
+
+}
+
+#eventsTitle{
+    font-size: larger;
+}
+
+#filteredDate{
+    color:black;
+    font-size: larger;
+
+}
+
+#noEventsMsg{
+    color:black;
 }
 
 #calendarOutput{
-    background-color: #ffa58f;
+    background-color:#ffa58f;
     margin: 0px;
     padding: 30px 30px;
 }
@@ -403,6 +420,8 @@ th, td {
 .month_year{
     font-size: larger;
     text-transform: uppercase;
+    color:#ea8c6f;
+    font-weight: bold;
 }
 
 .arrow-left,
@@ -421,6 +440,14 @@ th, td {
   border-top: 1px solid #ccc; 
   height: 2px; 
   background-color: transparent;
+}
+
+.line2{
+        border: none; 
+    border-top: 1px solid black; 
+    height: 3px; 
+    background-color: transparent;
+    margin-top:10px;
 }
 
 
@@ -474,6 +501,7 @@ th, td {
 
 .today:hover{
     background-color: #095c5f;
+    cursor: pointer;
 }
 
 .dummy{
@@ -486,7 +514,7 @@ th, td {
 
 .dummy:hover{
     background-color: #d6eae6;
-    
+    cursor: pointer;
     
 }
 
@@ -501,5 +529,10 @@ th, td {
 .notToday:hover{
     background-color: #d6eae6;
     border-radius: 50px;
-  
+  cursor: pointer;
+}
+
+.noEvents{
+    padding-top: 20px;
+
 }
