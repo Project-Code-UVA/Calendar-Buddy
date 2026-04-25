@@ -312,7 +312,6 @@ button{
 
 .outputSection{
     display: flex;
-    align-items: stretch;
     background-color: white;
     padding: 30px 40px;
     border-radius: 50px 50px 50px 50px; 
@@ -340,6 +339,8 @@ button{
     width: 50%;
     margin-left: 20px;
     margin-right: 20px;
+    height: fit-content;
+    align-self: flex-start;
    
 }
 
@@ -535,4 +536,20 @@ th, td {
 .noEvents{
     padding-top: 20px;
 
+}
+
+.hasEvent {
+    position: relative;
+}
+
+.hasEvent::after {
+    content: "";
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #ea8c6f;
+    border-radius: 50%;
 }
