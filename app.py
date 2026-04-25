@@ -379,14 +379,14 @@ def callback():
     login_user(user)
 
     # send user back to homepage 
-    return redirect(url_for("index"))
+    return redirect(url_for("home"))
 
 
 @app.route("/logout")
 @login_required # from flask-login and ensures only logged in users can access thsi endpoint
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("home"))
 
 # for debugging: check all users in database
 @app.route("/db")
