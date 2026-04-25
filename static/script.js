@@ -51,6 +51,19 @@ datetxtEl.innerHTML = `${dayName}, ${dmObj.months[month]} ${date}, ${year}`;
 filteredDate.innerHTML = `Today: ${dmObj.months[month]} ${date}, ${year}`;
 
 
+const dateItems = document.querySelectorAll(".dates li");
+const eventRows = document.querySelectorAll("#filteredTable tbody tr");
+const filteredTableEl = document.getElementById("filteredTable");
+const tableHead = filteredTableEl.querySelector("thead");
+
+const eventDates = new Set();
+
+eventRows.forEach(row => {
+    const date = row.dataset.date.trim();
+    eventDates.add(date);
+});
+
+
 //calendar functionality
 const displayCalendar = ()=>{
     let firstDayofMonth = new Date (year, month, 1).getDay();
@@ -60,10 +73,27 @@ const displayCalendar = ()=>{
      let lastDayofMonth = new Date (year, month, lastDateofMonth).getDay();
     let days = ""; 
 
+    
+
+
     //previous month days
-        for (let i = firstDayofMonth; i>0; i--){
-            days += `<li class ="notToday prevM">${lastDateofLastMonth-i+1}</li>`;
-        }
+       for (let i = firstDayofMonth; i > 0; i--) {
+    let selectedMonth = month - 1;
+    let selectedYear = year;
+
+    if (selectedMonth < 0) {
+        selectedMonth = 11;
+        selectedYear -= 1;
+    }
+
+    const dayNum = lastDateofLastMonth - i + 1;
+
+    const fullDate = `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}-${String(dayNum).padStart(2, "0")}`;
+
+    let hasEvent = eventDates.has(fullDate) ? "hasEvent" : "";
+
+    days += `<li class="notToday prevM ${hasEvent}">${dayNum}</li>`;
+}
         
     //this month
     for (i =1; i <= lastDateofMonth; i++){
@@ -74,14 +104,31 @@ const displayCalendar = ()=>{
         year === new Date().getFullYear()
             ? "today"
             :"notToday";
-        
-        days += `<li class = ${checkToday}>${i}</li>`;
+        const fullDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
+
+        let hasEvent = eventDates.has(fullDate) ? "hasEvent" : "";
+
+        days += `<li class="${checkToday} ${hasEvent}">${i}</li>`;
      }   
 
      //next month days
-     for (let i = lastDayofMonth; i <6; i ++){
-         days += `<li class ="notToday nextM">${i-lastDayofMonth+1}</li>`;
-     }
+     for (let i = lastDayofMonth; i < 6; i++) {
+    let selectedMonth = month + 1;
+    let selectedYear = year;
+
+    if (selectedMonth > 11) {
+        selectedMonth = 0;
+        selectedYear += 1;
+    }
+
+    const dayNum = i - lastDayofMonth + 1;
+
+    const fullDate = `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}-${String(dayNum).padStart(2, "0")}`;
+
+    let hasEvent = eventDates.has(fullDate) ? "hasEvent" : "";
+
+    days += `<li class="notToday nextM ${hasEvent}">${dayNum}</li>`;
+}
 
     datesEl.innerHTML = days;
     monthYearEl.innerHTML = `${dmObj.months[month]} ${year}`;
@@ -90,10 +137,7 @@ const displayCalendar = ()=>{
 displayCalendar();
 
 
-const dateItems = document.querySelectorAll(".dates li");
-const eventRows = document.querySelectorAll("#filteredTable tbody tr");
-const filteredTableEl = document.getElementById("filteredTable");
-const tableHead = filteredTableEl.querySelector("thead");
+
 
 //previous and next month buttons
 btnEl.forEach((btns) =>{
@@ -121,6 +165,7 @@ todayBtn.addEventListener('click', ()=>{
     
     filteredDate.innerHTML = `Today: ${dmObj.months[month]} ${dateObj.getDate()}, ${year}`;
     displayCalendar();
+    filterToday();
 });
 
 // buttons for each date
@@ -171,12 +216,15 @@ const selectedDate = `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0
 });
 
   //filter on load
-dateObjONE = new Date();
-monthONE = dateObjONE.getMonth();
-yearONE = dateObjONE.getFullYear();
-const oneTimeUse = `${yearONE}-${String(monthONE + 1).padStart(2, "0")}-${String(dateObjONE.getDate()).padStart(2, "0")}`;
+function filterToday(){
+    dateObjONE = new Date();
+    monthONE = dateObjONE.getMonth();
+    yearONE = dateObjONE.getFullYear();
+    const oneTimeUse = `${yearONE}-${String(monthONE + 1).padStart(2, "0")}-${String(dateObjONE.getDate()).padStart(2, "0")}`;
+    filterEvents(oneTimeUse);
+ }
 
-filterEvents(oneTimeUse);
+ filterToday();
 
 //filter function
 function filterEvents(selectedDate) {
@@ -196,11 +244,11 @@ function filterEvents(selectedDate) {
     if (!found) {
         console.log("No events for this date");
         noEventsMsg.style.display = "block";
-        noEventsMsg.innerHTML = `No events today`;
+        noEventsMsg.innerHTML = `No events`;
        filteredTableEl.style.display = "none";   // hides whole table
         tableHead.style.display = "none"; 
     } else {
-        noEventsMsg.innerHTML = `Your events today: `;
+        noEventsMsg.innerHTML = `Your events this day: `;
          filteredTableEl.style.display = "table";
         tableHead.style.display = "table-header-group";
     }
