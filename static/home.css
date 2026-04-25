@@ -52,11 +52,12 @@ body{
     gap: 10px;
 }
 .loginbtn-icon{
-    width: 30px;
+    width: 44px;
     height: auto;
     vertical-align: middle;
-    margin-right:20px;
+    margin-right:6px;
     object-fit: contain;
+    mix-blend-mode: screen;
 }
 .hero-section{
     background-color: transparent;
@@ -102,7 +103,7 @@ body{
     box-shadow: 0 16px 28px rgba(0, 0, 0, 0.12);
 }
 .btn-first{
-    background-color: #0d7377;
+    background-color: #ea8c6f;
     color: white;
 }
 .btn-second{
@@ -156,4 +157,8 @@ body{
     text-align: center;
     padding: 26px 20px;
     font-size: 13px;
+}
+
+#org{
+    color:white;
 }

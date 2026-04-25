@@ -58,52 +58,6 @@ Home page
                 <input type="submit" class= "upload" value="Upload" id = "uploadBtn">
             </form>
         </div>
-
-
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class = output>
-                <h3>Output:</h3>
-                <ul>
-                {% for message in messages %}
-                <li class="list">{{ message }}</li>
-                {% endfor %}
-                <br>
-
-                </ul>
-
-            {% endif %}
-        {% endwith %}
-
-    {% if filename and file_ready %}
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Location</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in event_json %}
-            <tr>
-                <td>{{ event["name"] }}</td>
-                <td>{{ event["start"].strftime("%Y-%m-%d") }}</td>
-                <td>{{ event["start"].strftime("%H:%M") }} to {{ event["end"].strftime("%H:%M") }} </td>
-                <td>{{ event["loc"] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-        <a href="{{url_for('download_file', filename=filename)}}"
-        class="download"> 
-        Download {{ filename }}
-        </a>
-
-   {% endif %}
-    </div>
     
             <div class="progressBar">
                 <div id = "bar" class="bar"></div>
@@ -112,8 +66,6 @@ Home page
         </div>    
 
     </div>
-
-
 
     <div id = "calendarLayout" style="display:none;">
         
@@ -270,9 +222,6 @@ Home page
     </div>
 
 
-
-
-
     <div id = "historyLayout" style="display:none;">
         <div class="uploadSection" id = "historySection">
             <h3 id="historyTitle">View your past uploads: </h3>
@@ -302,33 +251,11 @@ Home page
                     {% endif %}
             {% endif %}
         </div>
+    <div id = "historyLayout" style="display:none;">
+        <div class="uploadSection" id = "historySection">
+            <h3 id="historyTitle">View your past uploads: </h3>
 
-        {% if user_files %}
-            <p> user_files = {{ user_files }}</p>
-            <p> user_files length: {{ user_files|length }} </p>
-                <table border="1" cellpadding="5">
-                    <thead>
-                        <tr>
-                            <th>File Name</th>
-                            <th>Download ICS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for file in user_files %}
-                        <tr>
-                            <td>{{ file }}</td>
-                            <td> download link </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-        {% else %}
-                {% if current_user.is_authenticated %}
-                    <p>You have no files uploaded.</p>
-                {% else %}
-                    <p>Guest accounts have no history saved</p>
-                {% endif %}
-        {% endif %}
+        </div>
     </div>
 
 </section>
@@ -353,7 +280,7 @@ const historyTab = document.getElementById("historyTab");
 
 const uploadLayout = document.getElementById("uploadLayout");
 const historyLayout = document.getElementById("historyLayout");
-const calendarLayout = document.getElementById("calendarLayout");
+const calendarTab = document.getElementById("calendarLayout");
 
 function showLayout (layout, activeTab){
     uploadLayout.style.display = "none";
@@ -379,9 +306,11 @@ function showLayout (layout, activeTab){
 uploadTab.addEventListener("click",()=>{
     showLayout(uploadLayout, uploadTab);
 });
+
 calendarTab.addEventListener("click",()=>{
     showLayout(calendarLayout, calendarTab);
 });
+
 historyTab.addEventListener("click",()=>{
     showLayout(historyLayout,historyTab);
 });

@@ -268,7 +268,7 @@ button{
     padding-top: 0.4%;
     padding-bottom:0.4%;
      position: relative;
-     max-width: 45%;
+     max-width: 25%;
      list-style-type: none;
      display:flex;
 }
@@ -309,6 +309,7 @@ button{
     background-color: white;
 }
 
+<<<<<<< HEAD
 /* output */
 
 .outputSection{
@@ -385,6 +386,17 @@ button{
     margin-top: 20px;
     margin-bottom: 20px;
     
+#historyTitle{
+    padding-bottom: 20px;
+}
+
+#historySection{
+    height: 400px;
+}
+
+.historyTable{
+    margin-top: 5px;
+    margin-bottom: 20px;
     background-color: white;
     border-color: #0d7377;
     border-collapse: collapse;
@@ -553,4 +565,20 @@ th, td {
     height: 6px;
     background-color: #ea8c6f;
     border-radius: 50%;
+}
+.historyTable th,
+.historyTable td {
+    border: 1px solid #0d7377;
+    padding: 16px 40px ;
+    text-align: left;
+}
+
+.historyTable th {
+    background-color: #d6eae6;
+    color: #2d3748;
+}
+
+#downloadLink{
+    color: #dc7e62;
+    text-decoration: underline;
 }
